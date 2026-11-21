@@ -283,18 +283,36 @@ function references(bundle, item) {
   return out;
 }
 
+/** Ce que fait un ennemi, en quelques mots : « bouclier », « lacrymogènes », « vole »… */
+function enemyTraits(item) {
+  const w = item.arme;
+  return [item.ligne?.vie > 0 && 'ligne', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi', w?.type === 'jet' && 'canon à eau',
+    w?.mots?.length && 'lance des mots', item.reaction === 'charge' && 'charge', item.reaction === 'fonce' && 'fonce',
+    item.reaction === 'projecteur' && 'projecteur', item.deplacement === 'vol' && 'vole'].filter(Boolean);
+}
+
+/**
+ * Ce que fait un ennemi ou une recrue, pour la note de sa première rencontre (« Débloqué : AG · manif × 2 ») ;
+ * '' pour les autres cartes, ou un ennemi sans trait. Les mêmes faits que sur sa carte.
+ */
+export function trait(kind, item) {
+  if (kind === 'ennemis') return enemyTraits(item).slice(0, 2).join(' · ');
+  if (kind === 'recrues') {
+    if (item.multiplie > 1) return `manif × ${item.multiplie}`;
+    if (item.soin > 0) return 'soigne';
+    return `+ ${item.apport} dans la manif`;
+  }
+  return '';
+}
+
 function facts(kind, item) {
   if (kind === 'heros') {
     return [`encaisse ${item.pv} coups  vitesse ${bar(item.vitesse, 200)}  saut ${bar(item.saut, 4.5)}`,
       item.speciale?.nom && `Spéciale : ${item.speciale.nom}`];
   }
   if (kind === 'ennemis') {
-    const w = item.arme;
-    const traits = [item.ligne?.vie > 0 && 'ligne', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi', w?.type === 'jet' && 'canon à eau',
-      w?.mots?.length && 'lance des mots', item.reaction === 'charge' && 'charge', item.reaction === 'fonce' && 'fonce',
-      item.reaction === 'projecteur' && 'projecteur', item.deplacement === 'vol' && 'vole'].filter(Boolean);
     const pv = item.ligne?.vie > 0 ? item.ligne.vie : item.pv; // une ligne : sa vie de ligne
-    return [[hearts(Math.min(pv, 10)), pv > 10 ? ` ×${pv}` : ''], traits.join(' · ')];
+    return [[hearts(Math.min(pv, 10)), pv > 10 ? ` ×${pv}` : ''], enemyTraits(item).join(' · ')];
   }
   if (kind === 'boss') return [`Fortune : ${billions(item.fortune.montant)} d’euros`];
   if (kind === 'recrues') return [item.multiplie > 1 ? `Manif × ${item.multiplie}` : `+ ${item.apport} dans la manif`];

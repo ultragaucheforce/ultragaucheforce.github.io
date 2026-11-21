@@ -139,6 +139,7 @@ function setMode(next) {
   renderer.demo = next === 'menu';
   input.release(false); // les touches tenues restent : sous un carton ou en pause, on ne lâche pas les flèches
   input.active = next === 'playing';
+  input.card = next === 'card';
   acc = PHASE;
 }
 

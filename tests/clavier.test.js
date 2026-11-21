@@ -11,12 +11,17 @@ function browser() {
     querySelector: () => element(), querySelectorAll: () => [], addEventListener() {},
   });
   Object.assign(globalThis, {
-    addEventListener: (type, fn) => (listeners[type] ||= []).push(fn),
+    // Sur la fenêtre : d'abord les écouteurs de capture, puis les autres, chacun dans l'ordre où il a été posé.
+    addEventListener: (type, fn, capture = false) => (listeners[type] ||= []).push({ fn, capture }),
+    removeEventListener: (type, fn) => (listeners[type] = (listeners[type] || []).filter((l) => l.fn !== fn)),
     document: { body: element(), documentElement: element(), addEventListener() {} },
     innerWidth: 800, innerHeight: 450,
   });
   const fire = (type, code, repeat = false) => {
-    for (const fn of listeners[type] || []) fn({ code, repeat, preventDefault() {} });
+    let stopped = false;
+    const e = { code, repeat, preventDefault() {}, stopPropagation: () => (stopped = true) };
+    const all = listeners[type] || [];
+    for (const { fn } of [...all.filter((l) => l.capture), ...all.filter((l) => !l.capture)]) if (!stopped) fn(e);
   };
   return {
     down: (code) => fire('keydown', code),
@@ -30,10 +35,11 @@ const keys = browser();
 const { Input } = await import('../src/client/input.js');
 const input = new Input(globalThis.document.body);
 input.active = true;
-/** Ce que main.js fait à chaque changement d'écran (`setMode`). */
-const screen = (active) => {
+/** Ce que main.js fait à chaque changement d'écran (`setMode`) : `'playing'`, `'card'`, `'paused'`… */
+const screen = (mode) => {
   input.release(false);
-  input.active = active;
+  input.active = mode === 'playing';
+  input.card = mode === 'card';
 };
 const held = () => Object.entries(input.actions()).filter(([a, on]) => on && a !== 'jumpPressed').map(([a]) => a).sort();
 
@@ -41,8 +47,8 @@ test('droite et haut tenus pendant le carton d’un camarade libéré : toujours
   keys.down('ArrowRight');
   keys.down('ArrowUp');
   assert.deepEqual(held(), ['jump', 'right', 'up']);
-  screen(false); // le carton
-  screen(true); // « Continuer »
+  screen('card'); // le carton
+  screen('playing'); // « Continuer »
   assert.deepEqual(held(), ['jump', 'right', 'up'], 'ni relâcher ni réappuyer');
   keys.up('ArrowRight');
   keys.up('ArrowUp');
@@ -51,16 +57,16 @@ test('droite et haut tenus pendant le carton d’un camarade libéré : toujours
 
 test('une touche relâchée sous le carton ne reste pas enfoncée', () => {
   keys.down('ArrowLeft');
-  screen(false);
+  screen('card');
   keys.up('ArrowLeft');
-  screen(true);
+  screen('playing');
   assert.deepEqual(held(), []);
 });
 
 test('Entrée enfoncée sur un menu, encore tenue quand la partie part : pas de tract', () => {
-  screen(false); // le carton d'ouverture
+  screen('paused'); // le carton d'ouverture
   keys.down('Enter'); // « C'est parti »
-  screen(true);
+  screen('playing');
   keys.repeat('Enter');
   keys.repeat('Enter');
   assert.deepEqual(held(), [], 'ni l’appui du menu ni ses répétitions');
@@ -71,16 +77,31 @@ test('Entrée enfoncée sur un menu, encore tenue quand la partie part : pas de 
 });
 
 test('une touche enfoncée en pause ne compte qu’une fois relâchée et réappuyée', () => {
-  screen(false);
+  screen('paused');
   keys.down('ArrowLeft');
   keys.repeat('ArrowLeft');
-  screen(true);
+  screen('playing');
   keys.repeat('ArrowLeft');
   assert.deepEqual(held(), []);
   keys.up('ArrowLeft');
   keys.down('ArrowLeft');
   assert.deepEqual(held(), ['left']);
   keys.up('ArrowLeft');
+  assert.deepEqual(held(), []);
+});
+
+test('une touche enfoncée sous le carton d’un camarade, encore tenue quand il se ferme, compte aussitôt', () => {
+  screen('card');
+  keys.down('ArrowRight'); // dans le premier instant du carton, avant qu'il n'écoute les touches
+  // Le carton écoute ensuite (herocard.js) : la touche qui le ferme, il la garde pour lui.
+  const swallow = (e) => e.stopPropagation();
+  globalThis.addEventListener('keydown', swallow, true);
+  keys.down('ArrowUp');
+  globalThis.removeEventListener('keydown', swallow);
+  screen('playing');
+  assert.deepEqual(held(), ['jump', 'right', 'up'], 'sans relâcher ni réappuyer');
+  keys.up('ArrowRight');
+  keys.up('ArrowUp');
   assert.deepEqual(held(), []);
 });
 

@@ -324,6 +324,7 @@ export class Input {
     this.pad = pad;
     this.keys = {};
     this.menuKeys = new Set(); // touches enfoncées hors partie, ignorées en jeu jusqu'à leur relâchement
+    this.card = false; // vrai sous le carton d'un camarade libéré : la partie reprend dès qu'il se ferme
     this.touch = {};
     this.pointers = new Map();
     this.active = false; // vrai seulement en pleine partie : ailleurs, le clavier sert aux menus
@@ -337,6 +338,11 @@ export class Input {
     // L'appareil dont on montre les touches : le dernier qui a servi.
     this.device = document.body.classList.contains('tactile') ? 'pouce' : 'clavier';
 
+    // Sous le carton d'un camarade libéré, une touche de jeu enfoncée compte dès qu'il se ferme, si elle est encore
+    // tenue. Écouté à la capture, avant le carton : la touche qui le ferme, il la garde pour lui.
+    addEventListener('keydown', (e) => {
+      if (this.card && !e.repeat && KEYS[e.code]) this.keys[e.code] = KEYS[e.code];
+    }, true);
     addEventListener('keydown', (e) => {
       this.onAny();
       this.use('clavier');
@@ -345,9 +351,9 @@ export class Input {
       if (e.code === 'KeyP') return e.repeat || this.onPause();
       const action = KEYS[e.code];
       if (!action) return;
-      // Enfoncée hors partie (Entrée sur « C'est parti », une flèche dans un menu) : elle ne compte pas en jeu,
-      // répétitions comprises, tant qu'on ne l'a pas relâchée.
-      if (!this.active && !e.repeat) this.menuKeys.add(e.code);
+      // Enfoncée hors partie (Entrée sur « C'est parti », une flèche dans un menu, en pause) : elle ne compte pas
+      // en jeu, répétitions comprises, tant qu'on ne l'a pas relâchée. Sous le carton d'un camarade, si (voir plus haut).
+      if (!this.active && !this.card && !e.repeat) this.menuKeys.add(e.code);
       if (!this.active || this.menuKeys.has(e.code)) return;
       // En jeu, la répétition compte aussi : une touche tenue reprend après une perte de focus sans être réappuyée.
       this.keys[e.code] = action;

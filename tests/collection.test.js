@@ -129,9 +129,17 @@ test('collection : la note d’une rencontre dit ce que fait l’ennemi ou la re
     return `Débloqué : ${cardName(item)}${what ? ` · ${what}` : ''}`;
   };
   assert.equal(note('ennemis', 'lance-pleurs'), 'Débloqué : Lance-pleurs · lacrymogènes');
-  assert.equal(note('ennemis', 'robot-bouclier'), 'Débloqué : Robot-bouclier · bouclier · charge');
+  assert.equal(note('ennemis', 'robot-bouclier'), 'Débloqué : Robot-bouclier · bouclier · charge le cortège');
+  // Les médias ne frappent pas : ils filment, et la panique monte.
+  assert.equal(note('ennemis', 'drone'), 'Débloqué : Drone de PANIQUE TV · fait monter la panique · vole');
+  assert.equal(note('ennemis', 'duplex-panique-tv'), 'Débloqué : Duplex de PANIQUE TV · fait monter la panique');
+  assert.equal(note('ennemis', 'fnews'), 'Débloqué : Plateau de FNEWS · fait monter la panique');
+  // Une ligne : ce que le joueur fait, avec les mots des panneaux (« Tracts et manif : le barrage cède »).
+  assert.equal(note('ennemis', 'barrage'), 'Débloqué : Barrage · cède aux tracts et à la manif');
+  assert.equal(note('ennemis', 'gros-blinde'), 'Débloqué : Gros blindé · cède aux tracts et à la manif · lacrymogènes');
+  assert.equal(note('ennemis', 'quad'), 'Débloqué : Tondeuses · fonce');
   assert.equal(note('recrues', 'ag'), 'Débloqué : AG · manif × 2');
-  assert.equal(note('recrues', 'medic'), 'Débloqué : Street medic · soigne');
+  assert.equal(note('recrues', 'medic'), 'Débloqué : Street medic · soigne le héros');
   assert.equal(note('recrues', 'cheminot'), 'Débloqué : Cheminot · + 30 dans la manif');
   assert.equal(trait('heros', Object.values(bundle.heros)[0]), '', 'un héros a son carton, pas de trait');
   for (const kind of ['ennemis', 'recrues']) {
@@ -142,9 +150,11 @@ test('collection : la note d’une rencontre dit ce que fait l’ennemi ou la re
   }
 });
 
-test('carton héros : un cri déjà dans la citation n’est pas écrit deux fois', () => {
+test('carton héros : un cri qui est la citation, à la casse près, n’est pas écrit deux fois', () => {
   const melenchon = Object.values(bundle.heros).find((h) => h.cri && /république, c.est moi/i.test(h.cri));
-  assert.ok(melenchon && cryInQuote(bundle, melenchon), 'Mélenchon : le cri est dans sa citation');
+  assert.ok(melenchon && cryInQuote(bundle, melenchon), 'Mélenchon : le cri est sa citation');
+  // Ponctuée autrement (« ! » au lieu de « . »), la citation reste écrite.
+  assert.equal(cryInQuote(bundle, bundle.heros.aubry), false, 'Aubry : ponctuation différente, la citation reste');
   // Une citation plus longue que le cri reste entière : jamais une citation coupée.
   const sale = bundle.heros['sale-gosse'];
   assert.ok(/vivement 2027/i.test(sale.cri) && bundle.citations[sale.citation].texte.length > sale.cri.length);

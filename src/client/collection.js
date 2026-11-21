@@ -286,22 +286,26 @@ function references(bundle, item) {
 /** Ce que fait un ennemi, en quelques mots : « bouclier », « lacrymogènes », « vole »… */
 function enemyTraits(item) {
   const w = item.arme;
-  return [item.ligne?.vie > 0 && 'ligne', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi', w?.type === 'jet' && 'canon à eau',
-    w?.mots?.length && 'lance des mots', item.reaction === 'charge' && 'charge', item.reaction === 'fonce' && 'fonce',
+  return [item.ligne?.vie > 0 && 'cède aux tracts et à la manif', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi',
+    w?.type === 'jet' && 'canon à eau', w?.mots?.length && 'lance des mots', item.reaction === 'cadre' && 'fait monter la panique',
+    item.reaction === 'charge' && 'charge le cortège', (item.reaction === 'fonce' || item.deplacement === 'moto') && 'fonce',
     item.reaction === 'projecteur' && 'projecteur', item.deplacement === 'vol' && 'vole'].filter(Boolean);
+}
+
+/** Ce que fait une recrue : multiplier la manif, soigner le héros, ou y ajouter du monde. */
+function recruitTrait(item) {
+  if (item.multiplie > 1) return `manif × ${item.multiplie}`;
+  if (item.soin > 0) return 'soigne le héros';
+  return `+ ${item.apport} dans la manif`;
 }
 
 /**
  * Ce que fait un ennemi ou une recrue, pour la note de sa première rencontre (« Débloqué : AG · manif × 2 ») ;
- * '' pour les autres cartes, ou un ennemi sans trait. Les mêmes faits que sur sa carte.
+ * '' pour les autres cartes, ou un ennemi sans trait. Les mêmes faits que sur sa carte, deux au plus pour un ennemi.
  */
 export function trait(kind, item) {
   if (kind === 'ennemis') return enemyTraits(item).slice(0, 2).join(' · ');
-  if (kind === 'recrues') {
-    if (item.multiplie > 1) return `manif × ${item.multiplie}`;
-    if (item.soin > 0) return 'soigne';
-    return `+ ${item.apport} dans la manif`;
-  }
+  if (kind === 'recrues') return recruitTrait(item);
   return '';
 }
 
@@ -315,7 +319,10 @@ function facts(kind, item) {
     return [[hearts(Math.min(pv, 10)), pv > 10 ? ` ×${pv}` : ''], enemyTraits(item).join(' · ')];
   }
   if (kind === 'boss') return [`Fortune : ${billions(item.fortune.montant)} d’euros`];
-  if (kind === 'recrues') return [item.multiplie > 1 ? `Manif × ${item.multiplie}` : `+ ${item.apport} dans la manif`];
+  if (kind === 'recrues') {
+    const what = recruitTrait(item); // la même chose que la note de sa rencontre
+    return [what[0].toUpperCase() + what.slice(1)];
+  }
   if (kind === 'drapeaux') return [item.description];
   return [];
 }

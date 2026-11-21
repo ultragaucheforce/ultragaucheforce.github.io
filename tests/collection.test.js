@@ -145,6 +145,8 @@ test('collection : la note d’une rencontre dit ce que fait l’ennemi ou la re
 test('carton héros : un cri déjà dans la citation n’est pas écrit deux fois', () => {
   const melenchon = Object.values(bundle.heros).find((h) => h.cri && /république, c.est moi/i.test(h.cri));
   assert.ok(melenchon && cryInQuote(bundle, melenchon), 'Mélenchon : le cri est dans sa citation');
-  const twice = Object.values(bundle.heros).filter((h) => cryInQuote(bundle, h));
-  assert.ok(twice.length > 0 && twice.length < Object.keys(bundle.heros).length);
+  // Une citation plus longue que le cri reste entière : jamais une citation coupée.
+  const sale = bundle.heros['sale-gosse'];
+  assert.ok(/vivement 2027/i.test(sale.cri) && bundle.citations[sale.citation].texte.length > sale.cri.length);
+  assert.equal(cryInQuote(bundle, sale), false, 'Sale gosse : la citation, plus longue, reste écrite');
 });

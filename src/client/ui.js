@@ -6,7 +6,7 @@ import { spriteElement } from './sprites.js';
 import { REPO, REFERENCES } from './config.js';
 import { measuring } from './mesure.js';
 import { storeSave, eraseProgress, isFound, isReadOnly } from './save.js';
-import { SHELVES, TUTORIAL, VOTE_FICHES, nextLevel, allCards, collectionCount, isFresh, levelOrder, markSeen, openCard, progress, rarityCounts, shelfGrid, wonCards } from './collection.js';
+import { SHELVES, TUTORIAL, VOTE_FICHES, nextLevel, nextStep, allCards, collectionCount, isFresh, levelOrder, markSeen, openCard, progress, rarityCounts, shelfGrid, wonCards } from './collection.js';
 import { livesStack } from './lives.js';
 import { KEY_NAMES, CONTROLS, brief, mentions } from './input.js';
 import { injuryReport } from './blesses.js';
@@ -268,7 +268,7 @@ export class Screens {
    */
   levels() {
     const { niveaux } = this.bundle;
-    const next = this.nextLevel();
+    const next = nextStep(this.bundle, this.save); // le plan attend sur la prochaine étape, jamais sur le tuto
     let ahead = null;
     const stop = (id, i) => {
       const lv = niveaux[id];
@@ -367,7 +367,7 @@ export class Screens {
   playAs(hero) {
     this.save.heros = hero;
     storeSave(this.save);
-    this.go.play(this.nextLevel());
+    this.go.play(nextStep(this.bundle, this.save)); // un héros choisi part en campagne, pas dans le tuto (qui a les siens)
   }
 
   // ------------------------------------------------------------------ commandes, options, à propos

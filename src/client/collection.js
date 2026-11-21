@@ -433,15 +433,43 @@ export function rarityCounts(bundle, save, shelf) {
 }
 
 /**
- * Ce qui a été débloqué pendant un niveau, en rangée : elles se retournent une à une.
+ * Ce qui a été débloqué pendant un niveau, en deux groupes : les pancartes d'abord, puis le reste dans l'ordre des
+ * rayons. Chaque groupe a son étiquette, qui dit combien il compte ; un groupe vide n'en a pas.
+ * @param {string[]} keys  clés de sauvegarde, « rayon:identifiant »
+ * @returns {{ label: string, cards: object[] }[]}
+ */
+export function wonGroups(bundle, keys) {
+  const cards = cardsByKeys(bundle, keys);
+  const signs = cards.filter((c) => c.kind === 'pancartes');
+  const rest = cards.filter((c) => c.kind !== 'pancartes');
+  return [
+    signs.length && { label: signs.length > 1 ? `${signs.length} pancartes débloquées` : '1 pancarte débloquée', cards: signs },
+    rest.length && { label: `Aussi débloqué : ${rest.length}`, cards: rest },
+  ].filter(Boolean);
+}
+
+/**
+ * Ce qui a été débloqué pendant un niveau, en rangée : elles se retournent une à une. La rangée défile de côté ;
+ * un fondu au bord dit qu'il en reste.
  * @param {string[]} keys  clés de sauvegarde, « rayon:identifiant »
  */
 export function wonCards(bundle, keys) {
-  return h('div', { className: 'debloquees' }, cardsByKeys(bundle, keys).map((c, i) => {
-    const mini = miniCard(bundle, c, { onOpen: () => openCard(bundle, c) });
-    mini.style.animationDelay = `${Math.min(i, 30) * 70}ms`;
-    return mini;
-  }));
+  let i = 0;
+  const row = h('div', { className: 'debloquees' }, wonGroups(bundle, keys).map(({ label, cards }) => [
+    h('span', { className: 'groupe' }, label),
+    cards.map((c) => {
+      const mini = miniCard(bundle, c, { onOpen: () => openCard(bundle, c) });
+      mini.style.animationDelay = `${Math.min(i++, 30) * 70}ms`;
+      return mini;
+    }),
+  ]));
+  const edges = () => {
+    row.classList.toggle('avant', row.scrollLeft > 1);
+    row.classList.toggle('apres', row.scrollLeft + row.clientWidth < row.scrollWidth - 1);
+  };
+  row.addEventListener('scroll', edges, { passive: true });
+  if (typeof ResizeObserver === 'function') new ResizeObserver(edges).observe(row); // à l'affichage, puis à chaque taille
+  return row;
 }
 
 /** Combien de cartes trouvées, sur combien ? `save` nul : tout compte comme trouvé (Galerie). */

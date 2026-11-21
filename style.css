@@ -514,11 +514,19 @@ html.bas .fin .vrai { margin-top: 6px; padding: .3em .6em; gap: .1em .7em; font-
 html.bas .fin .vrai button { font-size: .74rem; }
 html.bas .fin .debloquees { margin-top: 6px; padding-bottom: 4px; }
 html.bas .fin .debloquees { padding-top: 2px; }
-html.bas .fin .debloquees .carte-mini { flex-basis: 58px; height: 64px; grid-template-rows: auto 34px; gap: 3px; padding: 3px; }
+/* Toutes les cartes de la rangée ont la hauteur d'une pancarte : la vignette prend la place du nom. */
+html.bas .fin .debloquees .carte-mini { flex-basis: 58px; height: 88px; grid-template-rows: auto 1fr; gap: 3px; padding: 3px; }
 html.bas .fin .debloquees .carte-mini .nom { display: none; }
-/* Une pancarte, un bandeau, un mot : une carte plus large, et deux lignes, celles que tient la vignette de 30 pixels. */
-html.bas .fin .debloquees .carte-mini:is(.pancartes, .manchettes, .citations) { flex-basis: 96px; }
-html.bas .fin .debloquees .carte-mini :is(.mot, .ecrit) { -webkit-line-clamp: 2; }
+/* Un bandeau, un mot : une carte plus large ; une pancarte, plus large encore, pour se lire en entier. */
+html.bas .fin .debloquees .carte-mini:is(.manchettes, .citations) { flex-basis: 96px; }
+html.bas .fin .debloquees .carte-mini.pancartes { flex-basis: 112px; }
+html.bas .fin .debloquees .carte-mini.pancartes .ecrit { -webkit-line-clamp: 6; }
+/* Plus bas encore (petit téléphone en paysage) : la rangée garde ses 64 pixels, la pancarte s'élargit et tient en quatre lignes. */
+@media (max-height: 380px) {
+  html.bas .fin .debloquees .carte-mini { height: 64px; }
+  html.bas .fin .debloquees .carte-mini.pancartes { flex-basis: 140px; }
+  html.bas .fin .debloquees .carte-mini.pancartes .ecrit { -webkit-line-clamp: 4; }
+}
 html.bas .fin .pied { margin-top: 6px; }
 html.bas .fin .pied button { padding: .45em .8em; }
 html.bas .fin .pied button.gros { font-size: 1.15rem; }
@@ -951,6 +959,9 @@ article.carte .genre.rarete-3 { background: var(--or); color: var(--nuit); }
  */
 .carte-mini .mot, .carte-mini .ecrit { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 5; overflow: hidden; padding: 0 4px; font: 900 .62rem/1.05 var(--titre); text-transform: uppercase; overflow-wrap: break-word; }
 .carte-mini .signe { font: 900 2rem/1 var(--titre); }
+/* Une pancarte se lit en entier sans l'ouvrir : un texte un peu plus petit, sur plus de lignes, dans une carte plus haute. */
+button.carte-mini.pancartes { grid-template-rows: auto 1fr 2.3em; height: 140px; }
+.carte-mini.pancartes .ecrit { -webkit-line-clamp: 8; font-size: .56rem; line-height: 1.08; }
 .carte-mini .nom { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; align-self: center; overflow-wrap: anywhere; }
 .carte-mini .nouveau { position: absolute; top: 6px; right: -24px; transform: rotate(35deg); padding: 3px 26px; background: var(--rouge); color: var(--blanc); font: 900 .5rem/1 var(--titre); letter-spacing: .08em; text-transform: uppercase; }
 .carte-mini:has(.nouveau) .numero b { float: none; margin-left: .35em; } /* le badge « Nouveau » occupe le coin : les étoiles suivent le numéro */
@@ -977,7 +988,14 @@ html.bas .carte-ouverte.partage .pied { flex-direction: column; margin-top: 0; }
 
 /* les cartes débloquées pendant un niveau : une rangée, retournées une à une */
 .debloquees { display: flex; gap: 8px; overflow-x: auto; padding: 4px 4px 10px; perspective: 900px; }
-.debloquees .carte-mini { flex: 0 0 96px; animation: retourne .4s ease-out both; }
+.debloquees .carte-mini { flex: 0 0 96px; height: 140px; grid-template-rows: auto 1fr 2.3em; animation: retourne .4s ease-out both; }
+.debloquees .carte-mini.pancartes { flex-basis: 112px; }
+/* L'étiquette d'un groupe (« 7 pancartes débloquées », « Aussi débloqué : 22 ») : dans la rangée, moins haute qu'une carte. */
+.debloquees .groupe { flex: 0 0 76px; align-self: center; padding-left: 6px; border-left: 3px solid var(--or); color: var(--or); font: 900 .68rem/1.15 var(--titre); text-transform: uppercase; overflow-wrap: break-word; }
+/* La rangée défile de côté : un fondu au bord où il reste des cartes. */
+.debloquees.apres { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 40px), #0000); mask-image: linear-gradient(to right, #000 calc(100% - 40px), #0000); }
+.debloquees.avant { -webkit-mask-image: linear-gradient(to right, #0000, #000 40px); mask-image: linear-gradient(to right, #0000, #000 40px); }
+.debloquees.avant.apres { -webkit-mask-image: linear-gradient(to right, #0000, #000 40px, #000 calc(100% - 40px), #0000); mask-image: linear-gradient(to right, #0000, #000 40px, #000 calc(100% - 40px), #0000); }
 body.sobre .debloquees .carte-mini, body.sobre .carte-ouverte article.carte { animation: none; }
 @media (prefers-reduced-motion: reduce) { .debloquees .carte-mini, .carte-ouverte article.carte { animation: none; } }
 .carte-ouverte article.carte > * { flex-shrink: 0; } /* trop haute pour l'écran : elle défile, elle ne s'écrase pas */

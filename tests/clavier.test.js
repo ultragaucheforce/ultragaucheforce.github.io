@@ -57,12 +57,28 @@ test('une touche relâchée sous le carton ne reste pas enfoncée', () => {
   assert.deepEqual(held(), []);
 });
 
-test('une touche enfoncée hors partie compte dès sa répétition, une fois en jeu', () => {
-  screen(false);
-  keys.down('ArrowLeft'); // en pause : rien
-  assert.deepEqual(held(), []);
+test('Entrée enfoncée sur un menu, encore tenue quand la partie part : pas de tract', () => {
+  screen(false); // le carton d'ouverture
+  keys.down('Enter'); // « C'est parti »
   screen(true);
-  keys.repeat('ArrowLeft'); // toujours tenue : le navigateur répète
+  keys.repeat('Enter');
+  keys.repeat('Enter');
+  assert.deepEqual(held(), [], 'ni l’appui du menu ni ses répétitions');
+  keys.up('Enter');
+  keys.down('Enter'); // relâchée puis réappuyée en jeu : elle tire
+  assert.deepEqual(held(), ['fire']);
+  keys.up('Enter');
+});
+
+test('une touche enfoncée en pause ne compte qu’une fois relâchée et réappuyée', () => {
+  screen(false);
+  keys.down('ArrowLeft');
+  keys.repeat('ArrowLeft');
+  screen(true);
+  keys.repeat('ArrowLeft');
+  assert.deepEqual(held(), []);
+  keys.up('ArrowLeft');
+  keys.down('ArrowLeft');
   assert.deepEqual(held(), ['left']);
   keys.up('ArrowLeft');
   assert.deepEqual(held(), []);

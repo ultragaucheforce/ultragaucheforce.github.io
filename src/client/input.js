@@ -323,6 +323,7 @@ export class Input {
   constructor(pad) {
     this.pad = pad;
     this.keys = {};
+    this.menuKeys = new Set(); // touches enfoncées hors partie, ignorées en jeu jusqu'à leur relâchement
     this.touch = {};
     this.pointers = new Map();
     this.active = false; // vrai seulement en pleine partie : ailleurs, le clavier sert aux menus
@@ -343,13 +344,19 @@ export class Input {
       if (e.code === 'Escape') return e.repeat || this.onBack();
       if (e.code === 'KeyP') return e.repeat || this.onPause();
       const action = KEYS[e.code];
-      if (!action || !this.active) return;
-      // La répétition d'une touche tenue compte aussi : enfoncée hors partie (sous un carton, en pause), elle agit
-      // dès le retour en jeu, sans avoir à la relâcher.
+      if (!action) return;
+      // Enfoncée hors partie (Entrée sur « C'est parti », une flèche dans un menu) : elle ne compte pas en jeu,
+      // répétitions comprises, tant qu'on ne l'a pas relâchée.
+      if (!this.active && !e.repeat) this.menuKeys.add(e.code);
+      if (!this.active || this.menuKeys.has(e.code)) return;
+      // En jeu, la répétition compte aussi : une touche tenue reprend après une perte de focus sans être réappuyée.
       this.keys[e.code] = action;
       e.preventDefault();
     });
-    addEventListener('keyup', (e) => delete this.keys[e.code]);
+    addEventListener('keyup', (e) => {
+      delete this.keys[e.code];
+      this.menuKeys.delete(e.code);
+    });
     addEventListener('blur', () => this.release());
     document.addEventListener('visibilitychange', () => document.hidden && this.release());
 
@@ -435,7 +442,10 @@ export class Input {
    * relâchement nous parvient toujours (`keyup`). Un changement d'écran garde ainsi les flèches qu'on tient.
    */
   release(keys = true) {
-    if (keys) this.keys = {};
+    if (keys) {
+      this.keys = {};
+      this.menuKeys.clear();
+    }
     this.pointers.clear();
     this.refreshTouch();
   }

@@ -339,11 +339,13 @@ export class Input {
     addEventListener('keydown', (e) => {
       this.onAny();
       this.use('clavier');
-      if (e.repeat) return;
-      if (e.code === 'Escape') return this.onBack();
-      if (e.code === 'KeyP') return this.onPause();
+      // Échap et P basculent : une touche tenue ne bascule qu'une fois.
+      if (e.code === 'Escape') return e.repeat || this.onBack();
+      if (e.code === 'KeyP') return e.repeat || this.onPause();
       const action = KEYS[e.code];
       if (!action || !this.active) return;
+      // La répétition d'une touche tenue compte aussi : enfoncée hors partie (sous un carton, en pause), elle agit
+      // dès le retour en jeu, sans avoir à la relâcher.
       this.keys[e.code] = action;
       e.preventDefault();
     });
@@ -427,8 +429,13 @@ export class Input {
     this.stick.style.setProperty('--dy', `${dy * k}px`);
   }
 
-  release() {
-    this.keys = {};
+  /**
+   * Tout est relâché : la page a perdu la main (autre fenêtre, onglet caché), les touches levées ailleurs ne nous
+   * parviendront pas. Avec `keys` faux, seuls les doigts sont relâchés : les touches tenues restent, et leur
+   * relâchement nous parvient toujours (`keyup`). Un changement d'écran garde ainsi les flèches qu'on tient.
+   */
+  release(keys = true) {
+    if (keys) this.keys = {};
     this.pointers.clear();
     this.refreshTouch();
   }

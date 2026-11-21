@@ -5,8 +5,8 @@ import { h, link, quoted, signature } from './dom.js';
 import { spriteElement } from './sprites.js';
 import { REPO, REFERENCES } from './config.js';
 import { measuring } from './mesure.js';
-import { storeSave, eraseProgress, isFound, isReadOnly, firstVisit } from './save.js';
-import { SHELVES, TUTORIAL, VOTE_FICHES, nextStep, allCards, collectionCount, isFresh, levelOrder, markSeen, openCard, progress, rarityCounts, shelfGrid, wonCards } from './collection.js';
+import { storeSave, eraseProgress, isFound, isReadOnly } from './save.js';
+import { SHELVES, TUTORIAL, VOTE_FICHES, nextLevel, allCards, collectionCount, isFresh, levelOrder, markSeen, openCard, progress, rarityCounts, shelfGrid, wonCards } from './collection.js';
 import { livesStack } from './lives.js';
 import { KEY_NAMES, CONTROLS, brief, mentions } from './input.js';
 import { injuryReport } from './blesses.js';
@@ -257,10 +257,9 @@ export class Screens {
       h('p', { className: 'mention' }, MENTION, ' ', link(REPO, 'Open source.')));
   }
 
-  /** La prochaine étape ; au tout premier passage, le tuto. */
+  /** La prochaine étape ; tant que le tuto n'a été ni joué ni passé, le tuto, même avec une progression. */
   nextLevel() {
-    if (firstVisit(this.save) && this.bundle.niveaux[TUTORIAL]) return TUTORIAL;
-    return nextStep(this.bundle, this.save);
+    return nextLevel(this.bundle, this.save);
   }
 
   /**

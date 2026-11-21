@@ -65,6 +65,9 @@ const DEFAULTS = {
   decouvertes: [], // ce qui est débloqué dans la Collection : « rayon:identifiant ». Une clé inconnue reste : la fiche peut revenir
   vues: {}, // rayon de la Collection → nombre de découvertes lors de sa dernière visite (badge « Nouveau »)
   heros: '', // le héros de départ choisi ; vide : au hasard
+  // Le tuto a été joué (« C'est parti ») ou passé. Absent d'une sauvegarde d'avant : jamais proposé, il le sera au
+  // prochain « Jouer », quelle que soit la progression. Effacer sa progression le garde.
+  tuto: false,
   // La musique (lecteur SoundCloud) part d'elle-même ; les options la coupent. `musiqueChoisie` : le joueur l'a
   // réglée lui-même (options, ou l'ancienne question « Radio Manif ? ») ; son choix est gardé.
   options: { son: true, musique: true, sobre: false, musiqueChoisie: false },
@@ -119,12 +122,13 @@ export function loadSave() {
 
 /**
  * Ce qu'un autre onglet a écrit entre-temps rejoint cette sauvegarde : l'union des découvertes, le meilleur record,
- * tout niveau terminé. Le reste (options, héros choisi) est à celui qui écrit en dernier.
+ * tout niveau terminé, le tuto joué ou passé. Le reste (options, héros choisi) est à celui qui écrit en dernier.
  */
 export function fold(save, other) {
   for (const key of other.decouvertes) if (!save.decouvertes.includes(key)) save.decouvertes.push(key);
   for (const [id, crowd] of Object.entries(other.records)) if (!(save.records[id] >= crowd)) save.records[id] = crowd;
   for (const [id, done] of Object.entries(other.termines)) if (done) save.termines[id] = true;
+  if (other.tuto) save.tuto = true;
   return save;
 }
 
@@ -169,7 +173,7 @@ export function followSystemMotion(options, reduce) {
   return before !== options.sobre;
 }
 
-/** Le joueur efface sa progression ; ses options et son brouillon restent, et les découvertes de `keep` aussi. */
+/** Le joueur efface sa progression ; ses options, son brouillon et le tuto déjà joué restent, et les découvertes de `keep` aussi. */
 export function eraseProgress(save, keep = []) {
   Object.assign(save, { termines: {}, records: {}, decouvertes: [...keep], vues: {}, heros: '' });
   return storeSave(save, { erase: true });
@@ -186,6 +190,13 @@ export const isFound = (save, kind, id) => save.decouvertes.includes(key(kind, i
  */
 export const firstVisit = (save, except = []) => !save.decouvertes.some((k) => typeof k === 'string' && k.startsWith('niveaux:')
   && !except.includes(k.slice('niveaux:'.length)));
+
+/** Le tuto est joué ou passé : il n'est plus proposé à « Jouer », il reste dans le menu. */
+export function tutorialDone(save) {
+  if (save.tuto) return;
+  save.tuto = true;
+  storeSave(save);
+}
 
 /** Note une découverte ; renvoie vrai si elle est nouvelle. */
 export function discover(save, kind, id) {

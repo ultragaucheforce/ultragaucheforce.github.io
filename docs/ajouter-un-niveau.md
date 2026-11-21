@@ -46,7 +46,7 @@ GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 ```
 
-Déposé dans `content/niveaux/`, il devient une étape du plan de campagne, à la suite des autres (sauf le tuto, `get-ready-with-me`, joué au tout premier « Jouer »). [`content/campagne.txt`](../content/campagne.txt) fixe l'ordre des premières étapes.
+Déposé dans `content/niveaux/`, il devient une étape du plan de campagne, à la suite des autres (sauf le tuto, `get-ready-with-me`, joué au premier « Jouer », tant qu'il n'a été ni joué ni passé). [`content/campagne.txt`](../content/campagne.txt) fixe l'ordre des premières étapes.
 
 ## L'en-tête
 

@@ -14,7 +14,7 @@ Un jeu de plateforme en pixel art où vous incarnez l'ultragauche telle que les 
 
 - **Faire la plus grosse manif.** Une soignante, un cheminot, une intersyndicale : chaque recrue compte, une assemblée générale double tout.
 - **Pousser.** Un barrage a une vie : les tracts l'entament, la manif le pousse, d'autant plus fort qu'elle est nombreuse.
-- **Un tuto pour commencer.** « Get ready with me : rejoindre la manif » se lance au tout premier « Jouer », se passe d'un bouton et se rejoue depuis le menu : chaque panneau attend le geste qu'il montre.
+- **Un tuto pour commencer.** « Get ready with me : rejoindre la manif » se lance au premier « Jouer », même avec une sauvegarde qui a déjà progressé, se passe d'un bouton et se rejoue depuis le menu : chaque panneau attend le geste qu'il montre.
 - **Six étapes.** Le camp d'entraînement de Millevaches, le rond-point, la raffinerie bloquée, le soir du 49.3 devant l'Assemblée, le siège de la chaîne d'info, puis « Bismillah, c'est les ténèbres », du lycée bloqué à la plus grande manif.
 - **Creuser, grimper.** Tout le décor se détruit. Sous la rue, le métro ; au-dessus, les étages et les toits.
 - **Libérer.** On part avec un seul personnage, tiré au hasard la première fois. Chaque camarade sorti de garde à vue rejoint l'équipe et se joue tout de suite ; quand il tombe, on repart avec le précédent.

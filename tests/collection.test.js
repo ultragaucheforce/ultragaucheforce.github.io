@@ -3,7 +3,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadContent } from '../tools/content.mjs';
-import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, whereToFind, wonGroups } from '../src/client/collection.js';
+import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, trait, facts, whereToFind, wonGroups } from '../src/client/collection.js';
+import { cryInQuote } from '../src/client/herocard.js';
+import { readTime } from '../src/client/ui.js';
 import { RARITIES } from '../src/content/rarities.js';
 
 const { bundle } = loadContent();
@@ -118,6 +120,50 @@ test('la note d’une pancarte débloquée dit son texte en entier, sans « … 
       assert.ok(note.startsWith(`Pancarte ${RARITIES[rarete]} débloquée : `), note);
     }
   }
+});
+
+test('collection : la note d’une rencontre dit ce que fait l’ennemi ou la recrue, en deux traits au plus', () => {
+  const note = (kind, id) => {
+    const item = bundle[kind][id];
+    const what = trait(kind, item);
+    return `Débloqué : ${cardName(item)}${what ? ` · ${what}` : ''}`;
+  };
+  assert.equal(note('ennemis', 'lance-pleurs'), 'Débloqué : Lance-pleurs · lacrymogènes');
+  assert.equal(note('ennemis', 'robot-bouclier'), 'Débloqué : Robot-bouclier · bouclier · charge le cortège');
+  // Les médias ne frappent pas : ils filment, et la panique monte.
+  assert.equal(note('ennemis', 'drone'), 'Débloqué : Drone de PANIQUE TV · fait monter la panique · vole');
+  assert.equal(note('ennemis', 'duplex-panique-tv'), 'Débloqué : Duplex de PANIQUE TV · fait monter la panique');
+  assert.equal(note('ennemis', 'fnews'), 'Débloqué : Plateau de FNEWS · fait monter la panique');
+  // Une ligne : ce que le joueur fait, avec les mots des panneaux (« Tracts et manif : le barrage cède »).
+  assert.equal(note('ennemis', 'barrage'), 'Débloqué : Barrage · cède aux tracts et à la manif');
+  assert.equal(note('ennemis', 'gros-blinde'), 'Débloqué : Gros blindé · cède aux tracts et à la manif · lacrymogènes');
+  assert.equal(note('ennemis', 'quad'), 'Débloqué : Tondeuses · fonce');
+  assert.equal(note('recrues', 'ag'), 'Débloqué : AG · manif × 2');
+  assert.equal(note('ennemis', 'helicoptere'), 'Débloqué : Bourdon · fait monter la panique · vole', 'son projecteur fait monter la panique');
+  assert.equal(note('recrues', 'medic'), 'Débloqué : Street medic · soigne le héros');
+  // Sa carte dit la même chose, et le monde qu'elle amène.
+  assert.deepEqual(facts('recrues', bundle.recrues.medic), ['Soigne le héros · + 5 dans la manif']);
+  assert.deepEqual(facts('recrues', bundle.recrues.ag), ['Manif × 2']);
+  assert.deepEqual(facts('recrues', bundle.recrues.cheminot), ['+ 30 dans la manif']);
+  assert.equal(note('recrues', 'cheminot'), 'Débloqué : Cheminot · + 30 dans la manif');
+  assert.equal(trait('heros', Object.values(bundle.heros)[0]), '', 'un héros a son carton, pas de trait');
+  for (const kind of ['ennemis', 'recrues']) {
+    for (const id of Object.keys(bundle[kind])) {
+      assert.ok(trait(kind, bundle[kind][id]).split(' · ').length <= 2, id);
+      assert.ok(readTime(note(kind, id)) < 6, `${id} : ${note(kind, id)}`);
+    }
+  }
+});
+
+test('carton héros : un cri qui est la citation, à la casse près, n’est pas écrit deux fois', () => {
+  const melenchon = Object.values(bundle.heros).find((h) => h.cri && /république, c.est moi/i.test(h.cri));
+  assert.ok(melenchon && cryInQuote(bundle, melenchon), 'Mélenchon : le cri est sa citation');
+  // Ponctuée autrement (« ! » au lieu de « . »), la citation reste écrite.
+  assert.equal(cryInQuote(bundle, bundle.heros.aubry), false, 'Aubry : ponctuation différente, la citation reste');
+  // Une citation plus longue que le cri reste entière : jamais une citation coupée.
+  const sale = bundle.heros['sale-gosse'];
+  assert.ok(/vivement 2027/i.test(sale.cri) && bundle.citations[sale.citation].texte.length > sale.cri.length);
+  assert.equal(cryInQuote(bundle, sale), false, 'Sale gosse : la citation, plus longue, reste écrite');
 });
 
 test('fin de niveau : les pancartes d’abord, chaque groupe annoncé avec son nombre', () => {

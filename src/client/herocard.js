@@ -13,6 +13,15 @@ const el = (tag, className, text) => {
   return node;
 };
 
+/**
+ * Vrai si le cri d'un héros est sa citation, signe pour signe, à la casse près. Une citation plus longue,
+ * ou ponctuée autrement, reste écrite : le cri ne se tient jamais seul au-dessus d'une signature qu'il ne cite pas exactement.
+ */
+export const cryInQuote = (bundle, hero) => {
+  const quote = bundle.citations[hero.citation];
+  return Boolean(hero.cri && quote && quote.texte.trim().toLowerCase() === hero.cri.trim().toLowerCase());
+};
+
 const CONFETTI = ['#3b5dc9', '#f4f4f4', '#e43b44', '#f6c21c'];
 const TILT = 16; // marge en haut et en bas, en pixels : le tampon et le nom sont penchés, ils dépassent de leur boîte
 
@@ -80,7 +89,8 @@ export function showHeroCard(bundle, hero, { audio = null, reduced = false, resc
     if (hero.cri) words.append(el('p', 'cri', quoted(hero.cri)));
     const quote = bundle.citations[hero.citation];
     if (quote) {
-      words.append(el('p', 'source', `${quoted(quote.texte)} — ${quote.auteur}, ${frenchDate(quote.date)}`));
+      // Un cri qui est la citation, à la casse près, n'est pas écrit deux fois : la ligne ne garde que la signature.
+      words.append(el('p', 'source', `${cryInQuote(bundle, hero) ? '' : `${quoted(quote.texte)} `}— ${quote.auteur}, ${frenchDate(quote.date)}`));
     }
     const perks = [rescued && '+1 vie', hero.speciale?.nom && `Spéciale : ${hero.speciale.nom}`].filter(Boolean);
     if (perks.length) {

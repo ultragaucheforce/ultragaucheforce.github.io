@@ -15,7 +15,7 @@ import { INJURY_FILE } from './blesses.js';
 import { shareImage, openShare } from './share.js';
 import { measure, runStarted, runEnded, heroRescued } from './mesure.js';
 import { loadSave, storeSave, discover, isFound, followSystemMotion, tutorialDone } from './save.js';
-import { TUTORIAL, nextStep, startingHero, cardName, citationOfWord, levelOrder, signNote, taxShocks } from './collection.js';
+import { TUTORIAL, nextStep, startingHero, cardName, citationOfWord, levelOrder, signNote, taxShocks, trait } from './collection.js';
 import { registerServiceWorker } from './sw-register.js';
 
 // Le contenu, parti dès index.html. S'il n'arrive pas, la mesure le compte (l'erreur, elle, suit son cours).
@@ -182,7 +182,10 @@ function collect(kind, id, quiet = false) {
   if (!item || !discover(save, kind, item.id)) return;
   won.push(`${kind}:${item.id}`);
   if (kind === 'pancartes') hud.toast(signNote(item), `rarete-${item.rarete} pancarte`, 'pancartes');
-  else if (!quiet) hud.toast(`Débloqué : ${cardName(item)}`, '', 'cartes');
+  else if (!quiet) {
+    const what = trait(kind, item); // ce que fait un ennemi ou une recrue, dit dès la rencontre
+    hud.toast(`Débloqué : ${cardName(item)}${what ? ` · ${what}` : ''}`, '', 'cartes');
+  }
   collect('citations', item.citation, true);
   for (const fiche of [item.fiche].flat()) collect('fiches', fiche, true);
 }

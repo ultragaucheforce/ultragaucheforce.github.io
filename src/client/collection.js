@@ -283,21 +283,50 @@ function references(bundle, item) {
   return out;
 }
 
-function facts(kind, item) {
+/** Ce que fait un ennemi, en quelques mots : « bouclier », « lacrymogènes », « vole »… */
+function enemyTraits(item) {
+  const w = item.arme;
+  return [item.ligne?.vie > 0 && 'cède aux tracts et à la manif', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi',
+    w?.type === 'jet' && 'canon à eau', w?.mots?.length && 'lance des mots',
+    // Une caméra qui cadre, un projecteur qui éclaire : la panique monte tant que le héros est dans le champ.
+    (item.reaction === 'cadre' || item.reaction === 'projecteur') && 'fait monter la panique',
+    item.reaction === 'charge' && 'charge le cortège', (item.reaction === 'fonce' || item.deplacement === 'moto') && 'fonce',
+    item.deplacement === 'vol' && 'vole'].filter(Boolean);
+}
+
+/** Ce que fait une recrue : multiplier la manif, soigner le héros, ou y ajouter du monde. */
+function recruitTrait(item) {
+  if (item.multiplie > 1) return `manif × ${item.multiplie}`;
+  if (item.soin > 0) return 'soigne le héros';
+  return `+ ${item.apport} dans la manif`;
+}
+
+/**
+ * Ce que fait un ennemi ou une recrue, pour la note de sa première rencontre (« Débloqué : AG · manif × 2 ») ;
+ * '' pour les autres cartes, ou un ennemi sans trait. Les mêmes faits que sur sa carte, deux au plus pour un ennemi.
+ */
+export function trait(kind, item) {
+  if (kind === 'ennemis') return enemyTraits(item).slice(0, 2).join(' · ');
+  if (kind === 'recrues') return recruitTrait(item);
+  return '';
+}
+
+/** Les lignes de chiffres et de traits sous une carte de la Collection. */
+export function facts(kind, item) {
   if (kind === 'heros') {
     return [`encaisse ${item.pv} coups  vitesse ${bar(item.vitesse, 200)}  saut ${bar(item.saut, 4.5)}`,
       item.speciale?.nom && `Spéciale : ${item.speciale.nom}`];
   }
   if (kind === 'ennemis') {
-    const w = item.arme;
-    const traits = [item.ligne?.vie > 0 && 'ligne', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi', w?.type === 'jet' && 'canon à eau',
-      w?.mots?.length && 'lance des mots', item.reaction === 'charge' && 'charge', item.reaction === 'fonce' && 'fonce',
-      item.reaction === 'projecteur' && 'projecteur', item.deplacement === 'vol' && 'vole'].filter(Boolean);
     const pv = item.ligne?.vie > 0 ? item.ligne.vie : item.pv; // une ligne : sa vie de ligne
-    return [[hearts(Math.min(pv, 10)), pv > 10 ? ` ×${pv}` : ''], traits.join(' · ')];
+    return [[hearts(Math.min(pv, 10)), pv > 10 ? ` ×${pv}` : ''], enemyTraits(item).join(' · ')];
   }
   if (kind === 'boss') return [`Fortune : ${billions(item.fortune.montant)} d’euros`];
-  if (kind === 'recrues') return [item.multiplie > 1 ? `Manif × ${item.multiplie}` : `+ ${item.apport} dans la manif`];
+  if (kind === 'recrues') {
+    // Ce que dit la note de sa rencontre ; une street medic amène aussi du monde, la carte le dit en plus.
+    const what = [recruitTrait(item), item.soin > 0 && item.apport > 0 && `+ ${item.apport} dans la manif`].filter(Boolean).join(' · ');
+    return [what[0].toUpperCase() + what.slice(1)];
+  }
   if (kind === 'drapeaux') return [item.description];
   return [];
 }

@@ -342,7 +342,8 @@ export class Screens {
   /**
    * Une rangée entière de cartes doit rester en vue sous les rayons. Sur un écran trop bas pour cela (téléphone en
    * paysage, barre du navigateur visible), le titre se replie ; plus bas encore, tout le panneau défile et les rayons
-   * restent collés en haut. La mesure ne dépend pas du rayon ouvert : d'un rayon à l'autre, rien ne bouge.
+   * restent collés en haut. La mesure prend la carte la plus haute de l'album (une pancarte), quel que soit le rayon
+   * ouvert : d'un rayon à l'autre, rien ne bouge.
    * Refaite quand la fenêtre change de taille.
    */
   fitShelf() {
@@ -351,8 +352,12 @@ export class Screens {
     panel.classList.remove('serre', 'tout-defile');
     panel.style.scrollPaddingTop = '';
     const grid = panel.querySelector('.contenu');
-    // La hauteur d'une carte : mesurée, gardée pour un filtre de rareté sans aucune carte (128 : `button.carte-mini`).
-    this.cardHeight = grid.querySelector('.carte-mini')?.offsetHeight || this.cardHeight || 128;
+    // La carte la plus haute : une pancarte, mesurée sur une carte invisible posée le temps de la mesure.
+    const probe = h('button', { type: 'button', className: 'carte-mini pancartes', tabIndex: -1 });
+    probe.style.visibility = 'hidden';
+    grid.append(probe);
+    this.cardHeight = Math.max(probe.offsetHeight, ...[...grid.querySelectorAll('.carte-mini')].map((c) => c.offsetHeight));
+    probe.remove();
     const fits = () => grid.clientHeight >= this.cardHeight + parseFloat(getComputedStyle(grid).paddingTop);
     if (fits()) return;
     panel.classList.add('serre');

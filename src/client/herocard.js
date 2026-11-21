@@ -13,7 +13,16 @@ const el = (tag, className, text) => {
   return node;
 };
 
-const CONFETTI = ['#3b5dc9', '#f4f4f4', '#e43b44', '#f6c21c'];
+/** Un texte réduit à ses lettres et chiffres, sans accent ni casse : pour savoir si le cri est déjà dans la citation. */
+export const plain = (text) => text.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+
+/** Vrai si le cri d'un héros est déjà dans le texte de sa citation. */
+export const cryInQuote = (bundle, hero) => {
+  const quote = bundle.citations[hero.citation];
+  return Boolean(hero.cri && quote && plain(quote.texte).includes(plain(hero.cri)));
+};
+
+const CONFETTI =['#3b5dc9', '#f4f4f4', '#e43b44', '#f6c21c'];
 const TILT = 16; // marge en haut et en bas, en pixels : le tampon et le nom sont penchés, ils dépassent de leur boîte
 
 /**
@@ -80,7 +89,8 @@ export function showHeroCard(bundle, hero, { audio = null, reduced = false, resc
     if (hero.cri) words.append(el('p', 'cri', quoted(hero.cri)));
     const quote = bundle.citations[hero.citation];
     if (quote) {
-      words.append(el('p', 'source', `${quoted(quote.texte)} — ${quote.auteur}, ${frenchDate(quote.date)}`));
+      // Un cri tiré de la citation n'est pas écrit deux fois : la ligne ne garde que la signature.
+      words.append(el('p', 'source', `${cryInQuote(bundle, hero) ? '' : `${quoted(quote.texte)} `}— ${quote.auteur}, ${frenchDate(quote.date)}`));
     }
     const perks = [rescued && '+1 vie', hero.speciale?.nom && `Spéciale : ${hero.speciale.nom}`].filter(Boolean);
     if (perks.length) {

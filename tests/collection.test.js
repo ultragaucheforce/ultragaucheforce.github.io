@@ -3,7 +3,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadContent } from '../tools/content.mjs';
-import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, whereToFind } from '../src/client/collection.js';
+import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, trait, whereToFind } from '../src/client/collection.js';
+import { cryInQuote } from '../src/client/herocard.js';
+import { readTime } from '../src/client/ui.js';
 import { RARITIES } from '../src/content/rarities.js';
 
 const { bundle } = loadContent();
@@ -118,4 +120,31 @@ test('la note d’une pancarte débloquée dit son texte en entier, sans « … 
       assert.ok(note.startsWith(`Pancarte ${RARITIES[rarete]} débloquée : `), note);
     }
   }
+});
+
+test('collection : la note d’une rencontre dit ce que fait l’ennemi ou la recrue, en deux traits au plus', () => {
+  const note = (kind, id) => {
+    const item = bundle[kind][id];
+    const what = trait(kind, item);
+    return `Débloqué : ${cardName(item)}${what ? ` · ${what}` : ''}`;
+  };
+  assert.equal(note('ennemis', 'lance-pleurs'), 'Débloqué : Lance-pleurs · lacrymogènes');
+  assert.equal(note('ennemis', 'robot-bouclier'), 'Débloqué : Robot-bouclier · bouclier · charge');
+  assert.equal(note('recrues', 'ag'), 'Débloqué : AG · manif × 2');
+  assert.equal(note('recrues', 'medic'), 'Débloqué : Street medic · soigne');
+  assert.equal(note('recrues', 'cheminot'), 'Débloqué : Cheminot · + 30 dans la manif');
+  assert.equal(trait('heros', Object.values(bundle.heros)[0]), '', 'un héros a son carton, pas de trait');
+  for (const kind of ['ennemis', 'recrues']) {
+    for (const id of Object.keys(bundle[kind])) {
+      assert.ok(trait(kind, bundle[kind][id]).split(' · ').length <= 2, id);
+      assert.ok(readTime(note(kind, id)) < 6, `${id} : ${note(kind, id)}`);
+    }
+  }
+});
+
+test('carton héros : un cri déjà dans la citation n’est pas écrit deux fois', () => {
+  const melenchon = Object.values(bundle.heros).find((h) => h.cri && /république, c.est moi/i.test(h.cri));
+  assert.ok(melenchon && cryInQuote(bundle, melenchon), 'Mélenchon : le cri est dans sa citation');
+  const twice = Object.values(bundle.heros).filter((h) => cryInQuote(bundle, h));
+  assert.ok(twice.length > 0 && twice.length < Object.keys(bundle.heros).length);
 });

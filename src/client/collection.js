@@ -434,7 +434,8 @@ export function rarityCounts(bundle, save, shelf) {
 
 /**
  * Ce qui a été débloqué pendant un niveau, en deux groupes : les pancartes d'abord, puis le reste dans l'ordre des
- * rayons. Chaque groupe a son étiquette, qui dit combien il compte ; un groupe vide n'en a pas.
+ * rayons. Chaque groupe a son étiquette, qui dit combien il compte ; un groupe vide n'en a pas. Sans pancarte, le
+ * reste n'est pas « aussi » débloqué : « 3 cartes débloquées ».
  * @param {string[]} keys  clés de sauvegarde, « rayon:identifiant »
  * @returns {{ label: string, cards: object[] }[]}
  */
@@ -444,7 +445,10 @@ export function wonGroups(bundle, keys) {
   const rest = cards.filter((c) => c.kind !== 'pancartes');
   return [
     signs.length && { label: signs.length > 1 ? `${signs.length} pancartes débloquées` : '1 pancarte débloquée', cards: signs },
-    rest.length && { label: `Aussi débloqué : ${rest.length}`, cards: rest },
+    rest.length && {
+      label: signs.length ? `Aussi débloqué : ${rest.length}` : rest.length > 1 ? `${rest.length} cartes débloquées` : '1 carte débloquée',
+      cards: rest,
+    },
   ].filter(Boolean);
 }
 

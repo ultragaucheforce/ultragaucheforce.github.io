@@ -521,12 +521,10 @@ html.bas .fin .debloquees .carte-mini .nom { display: none; }
 html.bas .fin .debloquees .carte-mini:is(.manchettes, .citations) { flex-basis: 96px; }
 html.bas .fin .debloquees .carte-mini.pancartes { flex-basis: 112px; }
 html.bas .fin .debloquees .carte-mini.pancartes .ecrit { -webkit-line-clamp: 6; }
-/* Plus bas encore (petit téléphone en paysage) : la rangée garde ses 64 pixels, la pancarte s'élargit et tient en quatre lignes. */
-@media (max-height: 380px) {
-  html.bas .fin .debloquees .carte-mini { height: 64px; }
-  html.bas .fin .debloquees .carte-mini.pancartes { flex-basis: 140px; }
-  html.bas .fin .debloquees .carte-mini.pancartes .ecrit { -webkit-line-clamp: 4; }
-}
+/* Plus bas encore (petit téléphone, en paysage ou pivoté) : la rangée garde ses 64 pixels, la pancarte s'élargit et tient en quatre lignes. */
+html.tres-bas .fin .debloquees .carte-mini { height: 64px; }
+html.tres-bas .fin .debloquees .carte-mini.pancartes { flex-basis: 140px; }
+html.tres-bas .fin .debloquees .carte-mini.pancartes .ecrit { -webkit-line-clamp: 4; }
 html.bas .fin .pied { margin-top: 6px; }
 html.bas .fin .pied button { padding: .45em .8em; }
 html.bas .fin .pied button.gros { font-size: 1.15rem; }
@@ -988,8 +986,10 @@ html.bas .carte-ouverte.partage .pied { flex-direction: column; margin-top: 0; }
 
 /* les cartes débloquées pendant un niveau : une rangée, retournées une à une */
 .debloquees { display: flex; gap: 8px; overflow-x: auto; padding: 4px 4px 10px; perspective: 900px; }
-.debloquees .carte-mini { flex: 0 0 96px; height: 140px; grid-template-rows: auto 1fr 2.3em; animation: retourne .4s ease-out both; }
-.debloquees .carte-mini.pancartes { flex-basis: 112px; }
+.debloquees .carte-mini { flex: 0 0 96px; animation: retourne .4s ease-out both; }
+/* En fin de niveau, la pancarte garde les 128 pixels des autres cartes (la rangée ne grandit pas) : plus large, sept lignes lui suffisent. */
+.debloquees .carte-mini.pancartes { flex-basis: 112px; height: 128px; }
+.debloquees .carte-mini.pancartes .ecrit { -webkit-line-clamp: 7; }
 /* L'étiquette d'un groupe (« 7 pancartes débloquées », « Aussi débloqué : 22 ») : dans la rangée, moins haute qu'une carte. */
 .debloquees .groupe { flex: 0 0 76px; align-self: center; padding-left: 6px; border-left: 3px solid var(--or); color: var(--or); font: 900 .68rem/1.15 var(--titre); text-transform: uppercase; overflow-wrap: break-word; }
 /* La rangée défile de côté : un fondu au bord où il reste des cartes. */

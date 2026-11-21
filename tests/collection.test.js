@@ -129,5 +129,6 @@ test('fin de niveau : les pancartes d’abord, chaque groupe annoncé avec son n
   assert.deepEqual(groups[0].cards.map(key), signs.map(key));
   assert.deepEqual(groups[1].cards.map(key), others.map(key), 'le reste garde l’ordre des rayons');
   assert.deepEqual(wonGroups(bundle, [key(signs[0])]).map((g) => g.label), ['1 pancarte débloquée'], 'sans autre carte, pas de seconde étiquette');
-  assert.deepEqual(wonGroups(bundle, others.slice(0, 3).map(key)).map((g) => g.label), ['Aussi débloqué : 3'], 'sans pancarte, pas de première étiquette');
+  assert.deepEqual(wonGroups(bundle, others.slice(0, 3).map(key)).map((g) => g.label), ['3 cartes débloquées'], 'sans pancarte, pas de « Aussi »');
+  assert.deepEqual(wonGroups(bundle, [key(others[0])]).map((g) => g.label), ['1 carte débloquée']);
 });

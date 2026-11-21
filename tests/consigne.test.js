@@ -5,8 +5,9 @@ import assert from 'node:assert/strict';
 import { coach, gesturesOf, guideView, dodge, CHECK_TIME, DODGE_DELAY } from '../src/client/consigne.js';
 import { askedFor } from '../src/client/ui.js';
 import { loadContent } from '../tools/content.mjs';
-import { TUTORIAL, levelOrder, nextStep, startingHero } from '../src/client/collection.js';
-import { firstVisit, eraseProgress } from '../src/client/save.js';
+import { readFileSync } from 'node:fs';
+import { TUTORIAL, levelOrder, nextLevel, nextStep, startingHero } from '../src/client/collection.js';
+import { firstVisit, eraseProgress, upgrade, fold, tutorialDone } from '../src/client/save.js';
 
 test('chaque panneau attend les gestes que nomment ses marqueurs', () => {
   assert.deepEqual(gesturesOf('[avancer] : avancer · [sauter] : sauter'), ['avancer', 'sauter']);
@@ -32,11 +33,38 @@ test('les panneaux du tuto : chacun enseigne un geste ou une règle, et les gest
   assert.ok(!levelOrder(bundle).includes(TUTORIAL), 'ni du plan de campagne');
 });
 
-test('le tuto vient au tout premier « Jouer », jamais après qu’un niveau a été commencé', () => {
+test('le tout premier passage (pour le tirage du héros) : aucun niveau commencé', () => {
   assert.equal(firstVisit({ decouvertes: [] }), true);
   assert.equal(firstVisit({ decouvertes: ['heros:melenchon', 'citations:x'] }), true);
-  assert.equal(firstVisit({ decouvertes: ['niveaux:millevaches'] }), false, 'un joueur qui a déjà joué n’y est pas renvoyé');
-  assert.equal(firstVisit({ decouvertes: [`niveaux:${TUTORIAL}`] }), false, 'lancé une fois, ou passé : la suite est la campagne');
+  assert.equal(firstVisit({ decouvertes: ['niveaux:millevaches'] }), false, 'un joueur qui a déjà joué');
+  assert.equal(firstVisit({ decouvertes: [`niveaux:${TUTORIAL}`] }), false, 'le tuto lancé une fois compte aussi');
+});
+
+test('« Jouer » mène au tuto tant qu’il n’a été ni joué ni passé, même avec une sauvegarde qui a progressé', async () => {
+  const { bundle } = await loadContent();
+  const order = levelOrder(bundle);
+  assert.equal(nextLevel(bundle, upgrade(null)), TUTORIAL, 'tout nouveau joueur');
+  // Une vraie sauvegarde d'avant : deux niveaux terminés, et le tuto lancé une fois (« niveaux:… ») sans `tuto`.
+  const v5 = upgrade(JSON.parse(readFileSync(new URL('./fixtures/sauvegardes/v5.json', import.meta.url), 'utf8')));
+  assert.equal(v5.tuto, false, 'un champ absent : pas encore joué');
+  assert.equal(nextLevel(bundle, v5), TUTORIAL);
+  assert.equal(nextLevel(bundle, { ...v5, decouvertes: [...v5.decouvertes, `niveaux:${TUTORIAL}`] }), TUTORIAL, 'même déjà vu sous l’ancienne règle');
+  tutorialDone(v5); // « C’est parti » ou « Passer le tuto »
+  assert.equal(v5.tuto, true);
+  assert.equal(nextLevel(bundle, v5), nextStep(bundle, v5));
+  assert.notEqual(nextLevel(bundle, v5), TUTORIAL);
+  assert.equal(nextLevel(bundle, { ...upgrade(null), tuto: true }), order[0], 'passé dès la première fois : le premier niveau');
+});
+
+test('le tuto joué ou passé le reste : effacer sa progression le garde, un autre onglet ne le défait pas', async () => {
+  const { bundle } = await loadContent();
+  const save = { ...upgrade(null), termines: { millevaches: true }, decouvertes: ['niveaux:millevaches'], tuto: true };
+  eraseProgress(save, [`niveaux:${TUTORIAL}`]);
+  assert.equal(save.tuto, true);
+  assert.notEqual(nextLevel(bundle, save), TUTORIAL);
+  const other = upgrade(null); // un onglet ouvert avant, qui n'a pas vu le tuto
+  fold(other, save);
+  assert.equal(other.tuto, true);
 });
 
 /** Joue la consigne pas à pas : `sign` le panneau lu, `actions` ce qui est enfoncé, `hero` le héros après le pas, 1/60 s par pas. */
@@ -140,7 +168,7 @@ test('après le tuto, la suite est la prochaine étape non terminée', async () 
   assert.equal(nextStep(bundle, { termines: Object.fromEntries(order.map((id) => [id, true])) }), order[0]);
 });
 
-test('effacer sa progression ne renvoie pas dans le tuto', () => {
+test('effacer sa progression garde la carte du tuto', () => {
   const save = { termines: { millevaches: true }, records: {}, decouvertes: ['niveaux:millevaches', 'heros:melenchon'], vues: {}, heros: 'x', options: {} };
   eraseProgress(save, [`niveaux:${TUTORIAL}`]);
   assert.deepEqual(save.decouvertes, [`niveaux:${TUTORIAL}`]);

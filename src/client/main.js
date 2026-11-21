@@ -14,7 +14,7 @@ import { showTaxScene, draw } from './tax.js';
 import { INJURY_FILE } from './blesses.js';
 import { shareImage, openShare } from './share.js';
 import { measure, runStarted, runEnded, heroRescued } from './mesure.js';
-import { loadSave, storeSave, discover, isFound, followSystemMotion } from './save.js';
+import { loadSave, storeSave, discover, isFound, followSystemMotion, tutorialDone } from './save.js';
 import { TUTORIAL, nextStep, startingHero, cardName, citationOfWord, levelOrder, signNote, taxShocks } from './collection.js';
 import { registerServiceWorker } from './sw-register.js';
 
@@ -111,6 +111,7 @@ const screens = new Screens(screenRoot, {
     },
     quit: () => toMenu(),
     skip: () => {
+      tutorialDone(save); // passé : « Jouer » mène désormais à la campagne
       endRun('abandoned', 'passer');
       won = []; // ce que le tuto a débloqué ne passe pas dans l'écran de fin de l'étape suivante
       start(nextStep(bundle, save));
@@ -136,8 +137,9 @@ function setMode(next) {
   document.body.classList.toggle('en-jeu', next === 'playing');
   radio.setVisible(next !== 'playing' && next !== 'card', next === 'playing' || next === 'paused' || next === 'card');
   renderer.demo = next === 'menu';
-  input.release();
+  input.release(false); // les touches tenues restent : sous un carton ou en pause, on ne lâche pas les flèches
   input.active = next === 'playing';
+  input.card = next === 'card';
   acc = PHASE;
 }
 
@@ -214,7 +216,10 @@ function start(id, level = null) {
   fitRight();
   begin = () => {
     begin = null;
-    if (tutorial) collect('niveaux', id, true); // le tuto vu : le prochain « Jouer » mène à la campagne
+    if (tutorial) {
+      collect('niveaux', id, true);
+      tutorialDone(save); // le tuto joué : le prochain « Jouer » mène à la campagne
+    }
     // Chaque vraie partie, rejouée ou non ; pas un changement de héros sur le carton. Un niveau de l'Atelier
     // compte sous le seul nom « atelier » : rien de ce qu'on y écrit ne part.
     run = runStarted({

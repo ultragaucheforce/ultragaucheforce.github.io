@@ -98,6 +98,12 @@ export function nextStep(bundle, save) {
   return order.find((id) => !save.termines[id]) || order[0];
 }
 
+/** Ce que lance « Jouer » : le tuto tant qu'il n'a été ni joué ni passé (`save.tuto`), puis la prochaine étape. */
+export function nextLevel(bundle, save) {
+  if (!save.tuto && bundle.niveaux[TUTORIAL]) return TUTORIAL;
+  return nextStep(bundle, save);
+}
+
 /**
  * Le personnage de départ : celui que le joueur a choisi ; sinon un de ceux qu'il a débloqués, au hasard ; et la toute
  * première partie (aucun niveau commencé, tuto à part : ses deux héros ne comptent pas), n'importe lequel, au hasard.

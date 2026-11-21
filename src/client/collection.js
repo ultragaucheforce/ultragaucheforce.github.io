@@ -287,9 +287,11 @@ function references(bundle, item) {
 function enemyTraits(item) {
   const w = item.arme;
   return [item.ligne?.vie > 0 && 'cède aux tracts et à la manif', item.bouclier && 'bouclier', w?.gaz > 0 && 'lacrymogènes', w?.vise > 0 && 'lance vers toi',
-    w?.type === 'jet' && 'canon à eau', w?.mots?.length && 'lance des mots', item.reaction === 'cadre' && 'fait monter la panique',
+    w?.type === 'jet' && 'canon à eau', w?.mots?.length && 'lance des mots',
+    // Une caméra qui cadre, un projecteur qui éclaire : la panique monte tant que le héros est dans le champ.
+    (item.reaction === 'cadre' || item.reaction === 'projecteur') && 'fait monter la panique',
     item.reaction === 'charge' && 'charge le cortège', (item.reaction === 'fonce' || item.deplacement === 'moto') && 'fonce',
-    item.reaction === 'projecteur' && 'projecteur', item.deplacement === 'vol' && 'vole'].filter(Boolean);
+    item.deplacement === 'vol' && 'vole'].filter(Boolean);
 }
 
 /** Ce que fait une recrue : multiplier la manif, soigner le héros, ou y ajouter du monde. */
@@ -309,7 +311,8 @@ export function trait(kind, item) {
   return '';
 }
 
-function facts(kind, item) {
+/** Les lignes de chiffres et de traits sous une carte de la Collection. */
+export function facts(kind, item) {
   if (kind === 'heros') {
     return [`encaisse ${item.pv} coups  vitesse ${bar(item.vitesse, 200)}  saut ${bar(item.saut, 4.5)}`,
       item.speciale?.nom && `Spéciale : ${item.speciale.nom}`];
@@ -320,7 +323,8 @@ function facts(kind, item) {
   }
   if (kind === 'boss') return [`Fortune : ${billions(item.fortune.montant)} d’euros`];
   if (kind === 'recrues') {
-    const what = recruitTrait(item); // la même chose que la note de sa rencontre
+    // Ce que dit la note de sa rencontre ; une street medic amène aussi du monde, la carte le dit en plus.
+    const what = [recruitTrait(item), item.soin > 0 && item.apport > 0 && `+ ${item.apport} dans la manif`].filter(Boolean).join(' · ');
     return [what[0].toUpperCase() + what.slice(1)];
   }
   if (kind === 'drapeaux') return [item.description];

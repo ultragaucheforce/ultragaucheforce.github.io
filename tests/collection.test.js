@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadContent } from '../tools/content.mjs';
-import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, trait, whereToFind } from '../src/client/collection.js';
+import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, trait, facts, whereToFind } from '../src/client/collection.js';
 import { cryInQuote } from '../src/client/herocard.js';
 import { readTime } from '../src/client/ui.js';
 import { RARITIES } from '../src/content/rarities.js';
@@ -139,7 +139,12 @@ test('collection : la note d’une rencontre dit ce que fait l’ennemi ou la re
   assert.equal(note('ennemis', 'gros-blinde'), 'Débloqué : Gros blindé · cède aux tracts et à la manif · lacrymogènes');
   assert.equal(note('ennemis', 'quad'), 'Débloqué : Tondeuses · fonce');
   assert.equal(note('recrues', 'ag'), 'Débloqué : AG · manif × 2');
+  assert.equal(note('ennemis', 'helicoptere'), 'Débloqué : Bourdon · fait monter la panique · vole', 'son projecteur fait monter la panique');
   assert.equal(note('recrues', 'medic'), 'Débloqué : Street medic · soigne le héros');
+  // Sa carte dit la même chose, et le monde qu'elle amène.
+  assert.deepEqual(facts('recrues', bundle.recrues.medic), ['Soigne le héros · + 5 dans la manif']);
+  assert.deepEqual(facts('recrues', bundle.recrues.ag), ['Manif × 2']);
+  assert.deepEqual(facts('recrues', bundle.recrues.cheminot), ['+ 30 dans la manif']);
   assert.equal(note('recrues', 'cheminot'), 'Débloqué : Cheminot · + 30 dans la manif');
   assert.equal(trait('heros', Object.values(bundle.heros)[0]), '', 'un héros a son carton, pas de trait');
   for (const kind of ['ennemis', 'recrues']) {

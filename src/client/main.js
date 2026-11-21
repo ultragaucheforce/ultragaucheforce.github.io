@@ -521,6 +521,7 @@ function layout() {
   root.style.setProperty('--vh', `${height / 100}px`);
   root.style.setProperty('--vw', `${(root.classList.contains('pivote') ? innerHeight : innerWidth) / 100}px`);
   root.classList.toggle('bas', height <= 480);
+  root.classList.toggle('tres-bas', height <= 380); // petit téléphone en paysage, ou tenu debout et pivoté
   renderer.resize();
   renderer.anchor = thumbs ? 0.58 : 0.62; // les pouces occupent les coins du bas : on remonte un peu l'action
   // Au clavier, le panneau se pose à 140 pixels environ ; une note du coin gauche plus longue (une pancarte, sur trois

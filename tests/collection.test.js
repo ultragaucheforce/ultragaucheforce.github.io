@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { loadContent } from '../tools/content.mjs';
-import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, trait, facts, whereToFind } from '../src/client/collection.js';
+import { SHELVES, TUTORIAL, allCards, cardId, cardName, citationOfWord, hintLine, levelOrder, signNote, trait, facts, whereToFind, wonGroups } from '../src/client/collection.js';
 import { cryInQuote } from '../src/client/herocard.js';
 import { readTime } from '../src/client/ui.js';
 import { RARITIES } from '../src/content/rarities.js';
@@ -164,4 +164,17 @@ test('carton héros : un cri qui est la citation, à la casse près, n’est pas
   const sale = bundle.heros['sale-gosse'];
   assert.ok(/vivement 2027/i.test(sale.cri) && bundle.citations[sale.citation].texte.length > sale.cri.length);
   assert.equal(cryInQuote(bundle, sale), false, 'Sale gosse : la citation, plus longue, reste écrite');
+});
+
+test('fin de niveau : les pancartes d’abord, chaque groupe annoncé avec son nombre', () => {
+  const key = (c) => `${c.kind}:${cardId(c.item)}`;
+  const signs = cards.filter((c) => c.kind === 'pancartes').slice(0, 7);
+  const others = cards.filter((c) => c.kind !== 'pancartes').slice(0, 22);
+  const groups = wonGroups(bundle, [...others, ...signs].map(key));
+  assert.deepEqual(groups.map((g) => g.label), ['7 pancartes débloquées', 'Aussi débloqué : 22']);
+  assert.deepEqual(groups[0].cards.map(key), signs.map(key));
+  assert.deepEqual(groups[1].cards.map(key), others.map(key), 'le reste garde l’ordre des rayons');
+  assert.deepEqual(wonGroups(bundle, [key(signs[0])]).map((g) => g.label), ['1 pancarte débloquée'], 'sans autre carte, pas de seconde étiquette');
+  assert.deepEqual(wonGroups(bundle, others.slice(0, 3).map(key)).map((g) => g.label), ['3 cartes débloquées'], 'sans pancarte, pas de « Aussi »');
+  assert.deepEqual(wonGroups(bundle, [key(others[0])]).map((g) => g.label), ['1 carte débloquée']);
 });

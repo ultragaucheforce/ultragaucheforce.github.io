@@ -1,26 +1,3 @@
-# Pancartes réellement vues en manifestation. Une ligne = une pancarte : TEXTE | où et quand — source
-BISMILLAH, C'EST LES TÉNÈBRES | vue à Nantes, automne 2026 — https://www.aljazeera.com/news/2026/10/21/why-are-french-protesters-chanting-bismillah-cest-les
-FASHION MAIS PAS FACHO | vue à Créteil, oct. 2026 — https://www.politis.fr/articles/2026/10/reportage-mobilisation-lyceenne-on-veut-juste-pouvoir-etudier-dans-de-bonnes-conditions/ | rareté: rare
-NOS CLASSES DÉBORDENT, NOTRE PATIENCE AUSSI | vue à Brest, oct. 2026 — https://www.lagazettefrance.fr/article/les-revendications-des-lyceens-des-moyens-supplementaires-a-la-suppression-de-parcoursup
-SANS ÉDUCATION, PAS DE NATION | vue à Paris, oct. 2026 — https://www.lagazettefrance.fr/article/les-lyceens-de-nouveau-dans-la-rue-pour-un-acte-v-du-mouvement
-ON N'EST PAS LE PROBLÈME MAIS LE RÉSULTAT DE VOS DÉCISIONS | vue à Paris, oct. 2026 — https://www.publicsenat.fr/actualites/politique/reportage-on-est-tous-dans-le-meme-bateau-quand-enseignants-et-syndicats-rejoignent-la-mobilisation-lyceenne
-TU NOUS METS 64 ANS, ON TE MAI 68 | vue à Paris, mars 2023 — https://www.carenews.com/news/reforme-des-retraites-a-la-manifestation-du-7-mars-les-jeunes-interrogent-la-place-du-travail | rareté: légendaire
-COMMENT PAPI ET MAMI PEUVENT ME FAIRE DES CRÊPES S'ILS TRAVAILLENT ? | vue à Paris, mars 2023 — https://www.carenews.com/news/reforme-des-retraites-a-la-manifestation-du-7-mars-les-jeunes-interrogent-la-place-du-travail | rareté: rare
-QUI AURAIT PU PRÉDIRE LA CRISE CLIMATIQUE ? | vue à Paris, janv. 2023 — https://reporterre.net/Pour-profiter-de-l-avenir-les-jeunes-manifestent-contre-la-reforme-des-retraites | rareté: épique
-MÉTRO, BOULOT, TOMBEAU | vue en France (ville non précisée), janv. 2023 — https://www.letribunaldunet.fr/humour/meilleures-pancartes-manifestation-reforme-retraites.html
-COULONS LA RÉFORME | vue à Laval, sur des kayaks, avr. 2023 — https://www.10h26.com/top-meilleures-pancartes-manif-contre-reforme-retraites | rareté: rare
-BLACK FRIDAY -50% SUR VOS RETRAITES | vue à Besançon, déc. 2019 — https://www.macommune.info/slogan-du-5-decembre-a-besancon-retour-sur-la-manifestation-en-images | rareté: épique
-JE SUIS UN GAULOIS RÉFRACTAIRE | vue à Besançon, déc. 2019 — https://www.macommune.info/slogan-du-5-decembre-a-besancon-retour-sur-la-manifestation-en-images
-DÉSOLÉ MAMAN, JE SÈCHE COMME LA PLANÈTE | vue à Paris, mars 2019 — https://reporterre.net/Le-recit-de-la-greve-des-jeunes-pour-le-climat | rareté: rare
-ERROR 404 : FUTURE NOT FOUND | vue à Paris, mars 2019 — https://reporterre.net/Le-recit-de-la-greve-des-jeunes-pour-le-climat
-DONNEZ-NOUS UN VRAI MINIS'TERRE | vue à Forcalquier, mars 2019 — https://reporterre.net/Le-recit-de-la-greve-des-jeunes-pour-le-climat | rareté: rare
-SI Y'A PLUS DE TERRE, Y'A PLUS DE BIÈRE | vue en France (ville non précisée), mars 2019 — https://www.purebreak.com/news/marche-pour-le-climat-les-slogans-les-plus-oses-et-improbables/172384 | rareté: rare
-LA PLANÈTE SÈCHE, ET NOUS ON TRINQUE | vue en France (ville non précisée), mars 2019 — https://www.purebreak.com/news/marche-pour-le-climat-les-slogans-les-plus-oses-et-improbables/172384 | rareté: épique
-ON VOUS LANCERAIT BIEN DES TOMATES MAIS C'EST PAS LA SAISON | vue en France (ville non précisée), mars 2019 — https://www.purebreak.com/news/marche-pour-le-climat-les-slogans-les-plus-oses-et-improbables/172384 | rareté: légendaire
-SAUVEZ LA PLANÈTE C'EST LA SEULE OÙ IL Y A DU CHOCOLAT | vue en France (ville non précisée), mars 2019 — https://www.purebreak.com/news/marche-pour-le-climat-les-slogans-les-plus-oses-et-improbables/172384
-CÉLIBATAIRE CHERCHE CLIMAT STABLE POUR RELATION DURABLE | vue à Strasbourg, sept. 2019 — https://www.linfodurable.fr/pour-le-climat-des-jeunes-moins-nombreux-mais-toujours-motives-13762 | rareté: légendaire
-LES CALOTTES SONT CUITES | vue à Strasbourg, sept. 2019 — https://www.linfodurable.fr/pour-le-climat-des-jeunes-moins-nombreux-mais-toujours-motives-13762 | rareté: épique
-OVAIRES ET CONTRE TOUS | vue en France (ville non précisée), mars 2023 — https://www.10h26.com/top-meilleures-pancartes-marche-feministe | rareté: rare
-NOUS NE SOMMES PAS HYSTÉRIQUES, NOUS SOMMES HISTORIQUES | vue en France (ville non précisée), mars 2023 — https://www.10h26.com/top-meilleures-pancartes-marche-feministe | rareté: rare
-MA COLÈRE NE TIENT PAS SUR CETTE PANCARTE | vue en France (ville non précisée), mars 2023 — https://www.10h26.com/top-meilleures-pancartes-marche-feministe | rareté: épique
-LA CUP EST PLEINE | vue en France (ville non précisée), mars 2023 — https://www.10h26.com/top-meilleures-pancartes-marche-feministe | rareté: épique
+# Pancartes vues en manif par des joueurs, sans article à citer : le lieu et le jour font foi.
+# Une ligne = une pancarte : TEXTE | où et quand
+HORIR BERGÉ | vue à Paris, 22 nov. 2026

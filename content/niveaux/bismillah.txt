@@ -19,7 +19,7 @@ musique: aya-sexy-nana-remix
 musique-boss: abattez-la-citadelle
 
 panneau.1: Tracts et manif : le barrage cède
-panneau.2: NASSE : les toits, ou le métro
+panneau.2: Les lignes se referment : les toits, ou le métro
 panneau.3: GARDE À VUE : un camarade est à l'étage
 panneau.4: LA CITADELLE
 panneau.5: LYCÉES EN LUTTE
@@ -102,7 +102,7 @@ $: liasse
 ..................................................B.................B..B.............B...................................B.........B.......................B.........B..........................R...............R..............M...........M.............M.................M...........M.....................M........LLLLLLL...............
 ..................................................V.................V..V.............V...................................V.........V.......................V.........V..........................V...............V..............V...........V.............V.................V...........V.....................V.......LLLLLLLLL..............
 ..................................................V..@..............V..V.............V...................................V.........V.......................V.........V..........................V..@............V..............V...........V.............V..@..............V...........V.....................V......LLLLLLLLLLL.............
-.n..D..+.5.z...k...s..%..=...x..t..n.q....j..K.fx.V........fQ..X....V..V..u....o..X..Vx;.n.+.y.<.1.cl.c._t_.b.Kv..~Qq..2.V..Xy.....V.n.x..*.,..N.q.m.x.a.n.V.........Vq..c.x.w..t.Q.n..m.jlx.3o.V..!...c........Vl...q.m.xs...aV..$.XX..$l.V.Q..w..<.cxt.Vy..$..y.....$!X..~.KQ.4..g...V.....$......$.X..r$..V...$.LLLLLLLLLLLLL..$...S.....
+.n..D..+.5.z...k...s..%..=...x..t..n.q....j..K.fx.V........fQ..X....V..V..u....o..X..Vx;.n.+.y.<.1.cl.c._t_.b.Kv..~Qq....V..Xy.....V.n.x..*.,.2N.q.m.x.a.n.V.........Vq..c.x.w..t.Q.n..m.jlx.3o.V..!...c........Vl...q.m.xs...aV..$.XX..$l.V.Q..w..<.cxt.Vy..$..y.....$!X..~.KQ.4..g...V.....$......$.X..r$..V...$.LLLLLLLLLLLLL..$...S.....
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGOOOOOOGGGGGGGGGGGGGGGGGGGGGGGMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGOOOOOOMMMMMMMMMMMMMMMMMMMMMMMMGGGGGGGGGGGGGGGGGGGGGGGGGGGGG

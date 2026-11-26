@@ -12,7 +12,7 @@ auteur: xsbfh
 # Arme : un mot géant qui traverse les rangs et ronge le décor. Il va plus vite qu'elle.
 arme.type: tir
 arme.cadence: 1.8
-arme.vitesse: 150
+arme.vitesse: 160
 arme.portee: 220
 arme.degats: 2
 arme.terrain: 2

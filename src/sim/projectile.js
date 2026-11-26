@@ -154,7 +154,8 @@ function touchActors(game, p) {
       // Le bouclier pare ce qui arrive de face, sauf projectile « blindage ».
       // Un projectile perçant (« perce ») n'abîme pas l'automate protégé, mais continue sa route.
       // Un tract qui explose ici n'est pas « paré » : le bouclier arrête le tract, pas le souffle, qui l'atteint (voir burst).
-      const blocked = e.def.bouclier && Math.sign(p.vx) === -e.facing && !p.armor;
+      // Un tir qui monte d'en dessous (`upright` < 0) passe sous le bouclier : sa dispersion ne le fait pas parer au hasard.
+      const blocked = e.def.bouclier && Math.sign(p.vx) === -e.facing && !p.armor && p.upright >= 0;
       const blast = p.explosion > 0 && !p.pierce;
       if (!blocked) game.hurtEnemy(e, damage, 'luttes', Math.sign(p.vx));
       else if (!blast) game.parry(e, e.facing > 0 ? e.x + e.w : e.x); // l'étincelle jaillit sur le bouclier, côté tireur

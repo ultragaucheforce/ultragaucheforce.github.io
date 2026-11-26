@@ -283,7 +283,7 @@ Lance un ou plusieurs projectiles devant soi.
 |---|---|---|---|
 | `arme.cadence` | tirs par seconde | 0,2 à 20 | 5 |
 | `arme.vitesse` | pixels par seconde | 30 à 420 | 240 |
-| `arme.gravite` | 0 = tout droit ; plus = en cloche. Tiré vers le haut, le projectile file tout droit jusqu'à sa portée | 0 à 900 | 0 |
+| `arme.gravite` | 0 = tout droit ; plus = en cloche. Tiré vers le haut, le projectile file tout droit jusqu'à sa portée ; après un rebond, il retombe | 0 à 900 | 0 |
 | `arme.elan` | impulsion vers le haut au départ | 0 à 400 | 0 |
 | `arme.dispersion` | écart vertical au hasard | 0 à 80 | 0 |
 | `arme.nombre` | projectiles par tir | 1 à 8 | 1 |
@@ -307,7 +307,7 @@ Lance un ou plusieurs projectiles devant soi.
 
 Un mot lancé par une unité qui reprend le `mot` d'une citation fait entrer cette citation dans la Collection.
 
-Un mot d'en face part de la bouche et ne blesse que par sa tête, un carré de `arme.taille` pixels ; ses lettres suivent derrière, à la longueur du mot dessiné (3,3 pixels par lettre). Un tract du héros qui touche n'importe quelle lettre abat le mot entier. Un mot qui naît sur le héros, collé à la bouche, le traverse sans le blesser. Les mots du héros, eux, touchent sur toute leur longueur. Les unités à mots ont `arme.visee: 0.4` : on les voit venir.
+Un mot d'en face part de la bouche et ne blesse que par sa tête, un carré de `arme.taille` pixels ; ses lettres suivent derrière, à la longueur du mot dessiné (3,3 pixels par lettre). Un tract du héros qui touche n'importe quelle lettre abat le mot entier. Un mot qui naît sur le héros, collé à la bouche, le traverse sans le blesser. Les mots du héros, eux, touchent sur toute leur longueur, vers le haut aussi : le mot s'y écrit à la verticale. Tiré vers le haut, un projectile part juste au-dessus du crâne, comme devant soi il part juste devant le corps, et son dessin pointe vers où il va. Les unités à mots ont `arme.visee: 0.4` : on les voit venir.
 
 Un mot part de la vitesse de l'arme, pas de celle du tireur : plus lent que la marche du héros, il lui reste collé dessus. Les héros à mots tirent à 250 pour une marche autour de 145.
 

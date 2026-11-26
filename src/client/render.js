@@ -1565,12 +1565,35 @@ export class Renderer {
       this.label(p.word, box.x - this.cx + box.w / 2, y - 1, { size: 7.5, color: '#e43b44' });
       return;
     }
+    // Tiré à la verticale, le dessin pointe vers où il va, comme devant soi : vers le haut, puis vers le bas s'il retombe.
+    const turn = p.upright ? (p.vy < 0 ? -Math.PI / 2 : Math.PI / 2) : 0;
     if (p.word) {
-      this.label(p.word, x + p.w / 2, y - 1, { size: 7.5, color: p.team === 'ordre' ? '#e43b44' : '#f4f4f4' });
+      const color = p.team === 'ordre' ? '#e43b44' : '#f4f4f4';
+      if (!turn) {
+        this.label(p.word, x + p.w / 2, y - 1, { size: 7.5, color });
+        return;
+      }
+      // À la verticale, le mot s'écrit le long de sa boîte, de bas en haut.
+      const [mx, my, reach] = [x + p.w / 2, y + p.h / 2, p.word.length * this.fit(7.5)];
+      if (mx + reach < 0 || mx - reach > this.viewW || my + reach < 0 || my - reach > this.viewH) return;
+      const { tctx } = this;
+      tctx.save();
+      tctx.translate(mx, my);
+      tctx.rotate(-Math.PI / 2);
+      this.label(p.word, 0, -this.fit(7.5) / 2, { size: 7.5, color });
+      tctx.restore();
       return;
     }
     const rows = p.def?.sprites?.[p.image];
-    if (rows) {
+    if (rows && turn) {
+      const img = sprite(rows, this.palette, false);
+      const { ctx } = this;
+      ctx.save();
+      ctx.translate(Math.round(x + p.w / 2), Math.round(y + p.h / 2));
+      ctx.rotate(turn);
+      ctx.drawImage(img, -Math.round(img.width / 2), -Math.round(img.height / 2));
+      ctx.restore();
+    } else if (rows) {
       const img = sprite(rows, this.palette, p.vx < 0);
       this.ctx.drawImage(img, Math.round(x + p.w / 2 - img.width / 2), Math.round(y + p.h / 2 - img.height / 2));
     } else {

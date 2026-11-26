@@ -17,6 +17,8 @@ const DEFAULTS = {
   slide: 0, // vitesse de sa glissade, pixels par seconde
   text: 0, // un mot d'en face : la longueur du mot dessiné derrière sa tête, pixels ; 0 sinon
   spare: false, // un mot né sur le héros : il le traverse sans le blesser
+  fall: 0, // tiré vers le haut sans gravité : la gravité de l'arme, qu'il retrouve à son premier rebond
+  upright: 0, // tiré à la verticale : -1 vers le haut, 1 vers le bas ; 0 devant soi (le dessin s'oriente)
 };
 const MAX_PROJECTILES = 240;
 
@@ -76,6 +78,10 @@ function strike(game, p, axis, before) {
     p.vy = 0;
   } else if (p.bounces > 0) {
     p.bounces--;
+    if (p.fall) { // tiré vers le haut, il retombe après son premier rebond
+      p.gravity = p.fall;
+      p.fall = 0;
+    }
     if (axis === 'x') p.vx = -p.vx;
     else p.vy = -p.vy * 0.7;
     game.sfx('impact', p.x);

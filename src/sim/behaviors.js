@@ -76,15 +76,24 @@ export const WEAPONS = {
         // `along` : la longueur de la boîte dans le sens du tir ; vers le haut, la même que devant soi.
         const along = word && !foeWord ? Math.max(w.taille, word.length * 5) : w.taille;
         const width = upright ? Math.min(w.taille, shooter.w) : along;
-        const height = upright < 0 ? along : upright ? Math.min(w.taille, shooter.h) : w.taille;
+        const thick = Math.min(w.taille, shooter.h); // l'épaisseur d'un tir vertical, sans plus
+        const left = shooter.x + shooter.w / 2 - width / 2;
+        // Vers le haut, la boîte tient dans l'air libre au-dessus du crâne : sous un plafond proche, elle se raccourcit
+        // (jamais sous son épaisseur) et touche ce qui est entre la tête et le plafond, jamais à travers.
+        // Il garde un pas de marge (6 px, voir updateProjectiles) : son premier pas le laisse dans l'air libre, il touche.
+        let free = 0;
+        while (upright < 0 && free < along + 6 && !hitsSolid(game.world, left, shooter.y - free - 1, width, 1)) free++;
+        const room = Math.max(0, free - 6);
+        const height = upright < 0 ? Math.max(thick, Math.min(along, room)) : upright ? thick : w.taille;
         // Plusieurs projectiles : éventail régulier ; un seul : petit écart au hasard.
         const spread = w.nombre > 1 ? (i / (w.nombre - 1) - 0.5) * 2 * w.dispersion : game.rng.range(-w.dispersion, w.dispersion);
         // À la verticale : le projectile part du crâne ou des pieds, bien dans l'axe, sans élan de cloche.
-        // Vers le haut, il naît juste au-dessus du crâne, comme devant soi il naît juste devant le corps.
+        // Vers le haut, il naît juste au-dessus du crâne, comme devant soi il naît juste devant le corps (sous un plafond
+        // trop proche, il naît sur le crâne, comme avant).
         // Il file tout droit jusqu'à sa portée, même si l'arme tire en cloche : sinon il retombe aussitôt.
         // Au premier rebond, il retrouve sa gravité (`fall`) et retombe, au lieu de rebondir du plafond au sol.
         const from = upright
-          ? { x: shooter.x + shooter.w / 2 - width / 2, y: upright > 0 ? shooter.y + shooter.h - height : shooter.y - height }
+          ? { x: left, y: upright > 0 ? shooter.y + shooter.h - height : shooter.y - Math.min(height, room) }
           : { x: ux >= 0 ? shooter.x + shooter.w : shooter.x - width, y };
         const proj = spawnProjectile(game, {
           ...from, w: width, h: height,

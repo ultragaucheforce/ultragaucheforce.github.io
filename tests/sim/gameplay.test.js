@@ -206,27 +206,56 @@ test('vers le haut, un tir part juste au-dessus du crâne, aussi long que devant
   }
 });
 
-test('un adversaire collé au tireur est touché même si un mur ou un plafond est plus près que la longueur du mot', () => {
+const withFoe = (real, id) => settle(play(flat({ height: 30, heros: id, legende: { f: { type: 'ennemi', id: 'barrage' } }, draw: (put, ground) => put(ground - 1, 20, 'f') }), { bundle: real.bundle, hero: id, invincible: true }));
+
+test('sous un plafond proche, un mot tiré vers le haut touche l’adversaire entre la tête et le plafond', () => {
   const real = loadContent();
   for (const id of ['rousseau', 'melenchon']) {
-    for (const up of [false, true]) {
-      const game = settle(play(flat({ height: 30, heros: id, legende: { f: { type: 'ennemi', id: 'barrage' } }, draw: (put, ground) => put(ground - 1, 20, 'f') }), { bundle: real.bundle, hero: id, invincible: true }));
+    for (const tiles of [2, 3]) {
+      const game = withFoe(real, id);
+      const { world, hero } = game;
+      const e = game.enemies[0];
+      for (let tx = 0; tx < world.w; tx++) world.set(tx, Math.floor(hero.y / TILE) - tiles, world.indexOf('acier'));
+      const before = e.hp;
+      for (let i = 0; i < 3; i++) {
+        [e.x, e.y, e.vx, e.vy] = [hero.x + hero.w / 2 - e.w / 2, hero.y - e.h - 2, 0, 0];
+        game.step(i === 0 ? { up: true, fire: true } : {});
+      }
+      assert.ok(e.hp < before, `${id}, plafond ${tiles} tuiles au-dessus : l’adversaire est touché (${before} → ${e.hp})`);
+    }
+  }
+});
+
+test('un tir ne touche jamais à travers un mur ou un plafond d’une tuile', () => {
+  const real = loadContent();
+  for (const id of ['rousseau', 'melenchon', 'poutou', 'tyrannogauchiste']) {
+    for (const gap of [0, 4, 10, 20]) { // devant soi : le mur à `gap` px du corps, l'adversaire derrière lui
+      const game = withFoe(real, id);
       const { world, hero } = game;
       hero.facing = 1;
       const e = game.enemies[0];
-      const steel = world.indexOf('acier');
-      // Un mur d'acier deux tuiles devant, ou un plafond trois tuiles au-dessus : plus près que le mot n'est long.
-      if (up) for (let tx = 0; tx < world.w; tx++) world.set(tx, Math.floor(hero.y / TILE) - 3, steel);
-      else for (let ty = 0; ty < world.h - 1; ty++) world.set(Math.floor((hero.x + hero.w) / TILE) + 2, ty, steel);
+      const col = Math.floor((hero.x + hero.w + gap) / TILE);
+      hero.x = col * TILE - gap - hero.w;
+      for (let ty = 0; ty < world.h - 1; ty++) world.set(col, ty, world.indexOf('acier'));
       const before = e.hp;
       for (let i = 0; i < 3; i++) {
-        if (up) [e.x, e.y] = [hero.x + hero.w / 2 - e.w / 2, hero.y - e.h - 6];
-        else [e.x, e.y] = [hero.x + hero.w + 6, hero.y + hero.h - e.h];
-        e.vx = 0;
-        e.vy = 0;
-        game.step(i === 0 ? { up, fire: true } : {});
+        [e.x, e.y, e.vx, hero.vx] = [(col + 1) * TILE + 1, hero.y + hero.h - e.h, 0, 0];
+        game.step(i === 0 ? { fire: true } : {});
       }
-      assert.ok(e.hp < before, `${id}, ${up ? 'vers le haut' : 'devant soi'} : l’adversaire collé est touché (${before} → ${e.hp})`);
+      assert.equal(e.hp, before, `${id}, mur à ${gap} px : rien derrière lui n’est touché`);
+    }
+    for (const gap of [0, 8, 20, 36]) { // vers le haut : le plafond à `gap` px du crâne, l'adversaire debout dessus
+      const game = withFoe(real, id);
+      const { world, hero } = game;
+      const e = game.enemies[0];
+      const row = Math.floor((hero.y - gap - 1) / TILE);
+      for (let tx = 0; tx < world.w; tx++) world.set(tx, row, world.indexOf('acier'));
+      const before = e.hp;
+      for (let i = 0; i < 3; i++) {
+        [e.x, e.y, e.vx, e.vy] = [hero.x + hero.w / 2 - e.w / 2, row * TILE - e.h, 0, 0];
+        game.step(i === 0 ? { up: true, fire: true } : {});
+      }
+      assert.equal(e.hp, before, `${id}, plafond à ${gap} px : rien au-dessus de lui n’est touché`);
     }
   }
 });

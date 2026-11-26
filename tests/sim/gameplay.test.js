@@ -159,6 +159,107 @@ test('chaque héros de la campagne tire vers le haut, même avec une arme en clo
   }
 });
 
+// « il est bizarre le tir en haut […] il est pas pareil/cohérent avec le tir droit » : un tir en cloche tiré vers le
+// haut retrouve sa gravité à son premier rebond, il retombe et sautille au sol comme devant soi.
+test('sous un plafond, le tir en cloche de Poutou et du Sans-dents retombe au lieu de rebondir du plafond au sol', () => {
+  const real = loadContent();
+  for (const id of ['poutou', 'sans-dents']) {
+    const game = settle(play(flat({ height: 30, heros: id }), { bundle: real.bundle, hero: id, invincible: true }));
+    const { world, hero } = game;
+    const row = Math.floor(hero.y / TILE) - 5; // un plafond d'acier cinq tuiles au-dessus de la tête
+    for (let tx = 0; tx < world.w; tx++) world.set(tx, row, world.indexOf('acier'));
+    const ceiling = (row + 1) * TILE;
+    game.step({ up: true, fire: true });
+    const shot = game.projectiles.find((p) => p.team === 'luttes');
+    let roof = 0; // contacts avec le plafond
+    let rising = true;
+    let low = shot.y;
+    for (let i = 0; i < 600 && !shot.dead; i++) {
+      game.step({});
+      if (rising && shot.vy > 0 && shot.y < ceiling + TILE) roof++;
+      rising = shot.vy < 0;
+      if (roof) low = Math.max(low, shot.y);
+    }
+    assert.equal(roof, 1, `${id} : il touche le plafond une fois`);
+    assert.ok(low > hero.y, `${id} : puis il retombe jusqu’au sol`);
+    assert.ok(shot.dead, `${id} : et il finit sa course`);
+  }
+});
+
+test('vers le haut, un tir part juste au-dessus du crâne, aussi long que devant soi : un mot de héros aussi', () => {
+  const real = loadContent();
+  for (const id of ['rousseau', 'melenchon', 'tyrannogauchiste', 'poutou']) {
+    const shoot = (actions) => {
+      const game = settle(play(flat({ height: 30, heros: id }), { bundle: real.bundle, hero: id, invincible: true }));
+      game.hero.facing = 1;
+      game.step(actions);
+      return { hero: game.hero, shot: game.projectiles.find((p) => p.team === 'luttes') };
+    };
+    const ahead = shoot({ fire: true });
+    const above = shoot({ up: true, fire: true });
+    assert.equal(above.shot.upright, -1, `${id} : tiré vers le haut`);
+    assert.equal(above.shot.h, ahead.shot.w, `${id} : la même longueur dans le sens du tir`);
+    assert.ok(above.shot.w <= above.hero.w, `${id} : pas plus large que le héros, il passe dans un puits d’une tuile`);
+    const step = 1 / 60;
+    assert.ok(Math.abs(above.shot.y + above.shot.h - above.hero.y - above.shot.vy * step) < 1, `${id} : il part juste au-dessus du crâne`);
+    assert.ok(Math.abs(ahead.shot.x - ahead.hero.x - ahead.hero.w - ahead.shot.vx * step) < 1, `${id} : devant soi, juste devant le corps`);
+  }
+});
+
+const withFoe = (real, id) => settle(play(flat({ height: 30, heros: id, legende: { f: { type: 'ennemi', id: 'barrage' } }, draw: (put, ground) => put(ground - 1, 20, 'f') }), { bundle: real.bundle, hero: id, invincible: true }));
+
+test('sous un plafond proche, un mot tiré vers le haut touche l’adversaire entre la tête et le plafond', () => {
+  const real = loadContent();
+  for (const id of ['rousseau', 'melenchon']) {
+    for (const tiles of [2, 3]) {
+      const game = withFoe(real, id);
+      const { world, hero } = game;
+      const e = game.enemies[0];
+      for (let tx = 0; tx < world.w; tx++) world.set(tx, Math.floor(hero.y / TILE) - tiles, world.indexOf('acier'));
+      const before = e.hp;
+      for (let i = 0; i < 3; i++) {
+        [e.x, e.y, e.vx, e.vy] = [hero.x + hero.w / 2 - e.w / 2, hero.y - e.h - 2, 0, 0];
+        game.step(i === 0 ? { up: true, fire: true } : {});
+      }
+      assert.ok(e.hp < before, `${id}, plafond ${tiles} tuiles au-dessus : l’adversaire est touché (${before} → ${e.hp})`);
+    }
+  }
+});
+
+test('un tir ne touche jamais à travers un mur ou un plafond d’une tuile', () => {
+  const real = loadContent();
+  for (const id of ['rousseau', 'melenchon', 'poutou', 'tyrannogauchiste']) {
+    for (const gap of [0, 4, 10, 20]) { // devant soi : le mur à `gap` px du corps, l'adversaire derrière lui
+      const game = withFoe(real, id);
+      const { world, hero } = game;
+      hero.facing = 1;
+      const e = game.enemies[0];
+      const col = Math.floor((hero.x + hero.w + gap) / TILE);
+      hero.x = col * TILE - gap - hero.w;
+      for (let ty = 0; ty < world.h - 1; ty++) world.set(col, ty, world.indexOf('acier'));
+      const before = e.hp;
+      for (let i = 0; i < 3; i++) {
+        [e.x, e.y, e.vx, hero.vx] = [(col + 1) * TILE + 1, hero.y + hero.h - e.h, 0, 0];
+        game.step(i === 0 ? { fire: true } : {});
+      }
+      assert.equal(e.hp, before, `${id}, mur à ${gap} px : rien derrière lui n’est touché`);
+    }
+    for (const gap of [0, 8, 20, 36]) { // vers le haut : le plafond à `gap` px du crâne, l'adversaire debout dessus
+      const game = withFoe(real, id);
+      const { world, hero } = game;
+      const e = game.enemies[0];
+      const row = Math.floor((hero.y - gap - 1) / TILE);
+      for (let tx = 0; tx < world.w; tx++) world.set(tx, row, world.indexOf('acier'));
+      const before = e.hp;
+      for (let i = 0; i < 3; i++) {
+        [e.x, e.y, e.vx, e.vy] = [hero.x + hero.w / 2 - e.w / 2, row * TILE - e.h, 0, 0];
+        game.step(i === 0 ? { up: true, fire: true } : {});
+      }
+      assert.equal(e.hp, before, `${id}, plafond à ${gap} px : rien au-dessus de lui n’est touché`);
+    }
+  }
+});
+
 test('spéciale « onde » : repousse, étourdit et casse les planches autour', () => {
   const game = settle(play(flat({
     legende: { f: enemy('fonceur') },

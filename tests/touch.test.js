@@ -167,6 +167,30 @@ test('TIR glissé vers le haut : le tir vise en haut ; le glissement entre SAUT 
   assert.deepEqual(drag(fire, at('jump')).end, { jump: true }, 'et dans l’autre sens');
 });
 
+// « il est bizarre le tir en haut […] il est pas pareil/cohérent avec le tir droit » : un pouce posé en haut de
+// LANCER tire droit ; viser en haut demande de glisser.
+test('TIR posé en haut du bouton tire droit ; il faut glisser vers le haut pour viser en haut', () => {
+  for (const view of [VIEW, ...PHONES]) {
+    const f = spotIn(view, 'fire');
+    // 50 px, ou le haut du cercle s'il est plus petit (49 px sur 750 × 342).
+    const high = Math.min(50, ring('fire') * Math.min(view.w, view.h) - 2);
+    const resting = trackPoint(undefined, { x: f.x, y: f.y - high }, view);
+    assert.deepEqual(touchActions([resting], view), { fire: true }, `${view.w}×${view.h} : posé ${Math.round(high)} px au-dessus du centre, immobile`);
+    let p = trackPoint(undefined, f, view);
+    for (let dy = 5; dy <= 50; dy += 5) p = trackPoint(p, { x: f.x, y: f.y - dy }, view);
+    assert.deepEqual(touchActions([p], view), { fire: true, up: true }, `${view.w}×${view.h} : posé au centre, monté de 50 px`);
+    // Parti de SAUT : il compte depuis son entrée dans le cercle de TIR.
+    const j = spotIn(view, 'jump');
+    p = trackPoint(undefined, j, view);
+    for (let k = 1; k <= 30 && p.act !== 'fire'; k++) p = trackPoint(p, { x: j.x + ((f.x - j.x) * k) / 30, y: j.y + ((f.y - j.y) * k) / 30 }, view);
+    assert.equal(p.act, 'fire', 'arrivé sur TIR');
+    const entry = { x: p.x, y: p.y };
+    assert.deepEqual(touchActions([p], view), { fire: true }, `${view.w}×${view.h} : entré dans TIR depuis SAUT, tir droit`);
+    for (let dy = 5; dy <= 45; dy += 5) p = trackPoint(p, { x: entry.x, y: entry.y - dy }, view);
+    assert.deepEqual(touchActions([p], view), { fire: true, up: true }, `${view.w}×${view.h} : entré depuis SAUT, monté de 45 px`);
+  }
+});
+
 // « je me retrouve à tirer sans l'avoir voulu » : sur les deux tailles d'iPhone tenu en paysage.
 const PHONES = [{ w: 844, h: 390 }, { w: 750, h: 342 }];
 const spotIn = (view, action) => {

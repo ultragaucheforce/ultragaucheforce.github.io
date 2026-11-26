@@ -98,7 +98,7 @@ export const padInUse = (pad) => PAD_BUTTONS.some((i) => pad.buttons[i]?.pressed
  * Moitié gauche : un manche flottant, là où le pouce se pose. Moitié droite : chaque bouton ne répond que dans un
  * cercle autour de lui, à peine plus grand que son disque ; ailleurs, rien. Un doigt qui glisse garde son action
  * tant qu'il n'est pas entré dans le cercle de l'autre bouton ; posé dans le vide, il ne fait rien jusqu'à entrer
- * dans celui de TIR ou de SAUT. Au-dessus de TIR, le tir vise en haut. SPÉ ne répond qu'à un doigt posé sur elle.
+ * dans celui de TIR ou de SAUT. TIR glissé vers le haut, le tir vise en haut. SPÉ ne répond qu'à un doigt posé sur elle.
  */
 export const ZONES = {
   split: 0.5, // frontière entre le manche et les actions
@@ -110,7 +110,7 @@ export const ZONES = {
   slack: 12, // … et on n'en sort qu'au-delà de 30 + 12° : un pouce qui tremble de 3 px ne fait pas clignoter la marche
   pull: 26, // tirer le manche vers le bas d'autant de pixels : le tir vise en bas (on creuse)
   both: 26, // dans les cercles de TIR et de SAUT à la fois, à peu près à égale distance (écart en pixels) : les deux
-  aim: 0.11, // un doigt de TIR monté au-dessus du bouton (en fraction du petit côté de l'écran) : le tir vise en haut
+  aim: 0.11, // un doigt de TIR glissé vers le haut d'autant (en fraction du petit côté de l'écran) : le tir vise en haut
   // Le rayon des disques dessinés (`style.css` : 21vmin et 15vmin de diamètre), en fraction du petit côté de l'écran.
   disc: { fire: 0.105, jump: 0.105, special: 0.075 },
   // La marge autour d'un disque où il répond encore : 4 % du petit côté, 14 à 16 px sur un téléphone (342 à 390 px).
@@ -174,10 +174,11 @@ function gliding(act, x, y, view) {
 
 /**
  * Quelles actions sont enfoncées, étant donné les doigts posés ? Fonction pure, testée dans Node.
- * @param {{x: number, y: number, ox: number, oy: number, ay?: number, stick?: boolean, act?: string}[]} points
+ * @param {{x: number, y: number, ox: number, oy: number, ay?: number, fy?: number, stick?: boolean, act?: string}[]} points
  *        position de chaque doigt, point où il s'est posé, `ay` : le point le plus haut d'où il redescend (sinon `oy`),
  *        `stick` : vrai s'il s'est posé à gauche (sinon on le déduit de `ox`), et `act` : l'action d'un doigt de droite
- *        suivi pas à pas (`trackPoint`) ; sans elle, celle de l'endroit où il s'est posé, puis du bouton où il est
+ *        suivi pas à pas (`trackPoint`) ; sans elle, celle de l'endroit où il s'est posé, puis du bouton où il est ;
+ *        `fy` : la hauteur où il a commencé à tirer (sinon `oy`)
  * @param {{w: number, h: number}} view  taille de l'écran de jeu, en pixels
  */
 export function touchActions(points, view) {
@@ -209,7 +210,9 @@ export function touchActions(points, view) {
     const act = p.act ?? gliding(landing(p.ox, p.oy, view), p.x, p.y, view);
     if (!act) continue;
     for (const a of act.split(' ')) pressed[a] = true;
-    if (act === 'fire' && fire.y - p.y > ZONES.aim * unit) pressed.up = true; // monté au-dessus de TIR
+    // Glissé vers le haut depuis là où il a commencé à tirer (posé, ou entré dans le cercle) : le tir vise en haut.
+    // Un pouce simplement posé en haut du bouton tire droit.
+    if (act === 'fire' && (p.fy ?? p.oy) - p.y > ZONES.aim * unit) pressed.up = true;
   }
   return pressed;
 }
@@ -226,6 +229,9 @@ export function trackPoint(p, at, view) {
   if (!next.stick) {
     // À droite, le doigt garde ce qu'il fait d'un pas à l'autre : un pouce qui roule sur SAUT ne se met pas à tirer.
     next.act = gliding(next.act ?? landing(next.ox, next.oy, view), next.x, next.y, view);
+    // `fy` : la hauteur où il commence à tirer, posé sur TIR ou entré dans son cercle ; viser en haut se mesure de là.
+    if (next.act !== 'fire') delete next.fy;
+    else if (p?.act !== 'fire' || next.fy === undefined) next.fy = next.y;
     return next;
   }
   // Le manche suit le pouce : sorti de l'anneau, l'anneau glisse avec lui, dans la direction du pouce. On change de

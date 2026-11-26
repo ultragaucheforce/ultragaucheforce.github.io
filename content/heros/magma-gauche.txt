@@ -16,7 +16,7 @@ arme.vitesse: 200
 arme.gravite: 450
 arme.elan: 90
 arme.portee: 280
-arme.degats: 3
+arme.degats: 2
 arme.terrain: 5
 arme.explosion: 22
 arme.taille: 7

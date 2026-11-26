@@ -1,5 +1,6 @@
 // Règles du jeu : sauvetage, armes, boucliers, grenades fratricides, panique, cortège, vies, boss.
 
+import { spawnProjectile } from '../../src/sim/projectile.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readdirSync, readFileSync } from 'node:fs';
@@ -418,6 +419,23 @@ test('bouclier : arrête les tirs de face, pas ceux de dos ni les projectiles «
   const armored = statue(3, piercing);
   run(armored, 120, { fire: true });
   assert.equal(armored.enemies[0].state, 'done', 'blindage : passe le bouclier de face');
+});
+
+test('bouclier : un tir qui monte d’en dessous n’est jamais paré, quelle que soit sa dispersion', () => {
+  for (const vx of [-8, 8]) {
+    const game = settle(play(flat({
+      legende: { s: enemy('statue') },
+      draw: (put, ground) => put(ground, 8, 's'),
+    }), { bundle: fixtureBundle() }));
+    const statue = game.enemies[0];
+    const hp = statue.hp;
+    spawnProjectile(game, {
+      team: 'luttes', w: 6, h: 6, damage: 1, range: 60, upright: -1, vx, vy: -200,
+      x: statue.x + statue.w / 2 - 3, y: statue.y + statue.h - 10,
+    });
+    run(game, 3);
+    assert.ok(statue.hp < hp, `dispersion ${vx} : le tir d’en dessous touche le bouclier de face`);
+  }
 });
 
 test('grenade fratricide : l’automate qui se blesse lui-même est compté à part', () => {

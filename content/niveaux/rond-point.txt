@@ -14,7 +14,7 @@ musique: hey-hey-macron
 musique-boss: macron-demission-peridurale
 
 panneau.1: GARDE À VUE : un camarade est à l'étage
-panneau.2: Monte sur la butte, ou creuse sous les planches
+panneau.2: Monte sur la butte, ou casse les planches
 panneau.3: Tracts et manif : le barrage cède
 panneau.4: Les lignes se referment : monte sur le muret
 panneau.5: HYPERMARCHÉ

@@ -24,7 +24,7 @@ musique-boss: caca-sur-bardella-sketogan
 
 panneau.1: Tracts et manif : le barrage cède
 panneau.2: Les lignes se referment : creuse sous la rue
-panneau.3: Casse la régie : PANIQUE TV passe à l'écran noir
+panneau.3: Casse la régie : écran noir, comme C8
 
 c: robot-bouclier
 b: barrage

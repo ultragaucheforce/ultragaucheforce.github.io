@@ -18,7 +18,7 @@ panneau.3: La paysanne rejoint la manif ✊
 panneau.4: [spéciale] : Lancer ta spéciale
 panneau.5: Pousse contre le mur · [sauter], [sauter], [sauter] : Grimper
 panneau.6: ✊ Tracts et manif : le blindé cède
-panneau.7: Un tonneau saute, ses voisins aussi
+panneau.7: Un tonneau explose, ses voisins aussi
 panneau.8: [bas] + [tirer] : Creuser · [haut] + [tirer] : Lancer en haut
 panneau.9: Fonce dans la cage : un camarade est libéré
 

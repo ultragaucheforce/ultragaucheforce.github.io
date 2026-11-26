@@ -16,8 +16,8 @@ musique: casserolade-gueret
 musique-boss: majes-macron-explosion
 
 panneau.1: Tracts et manif : le barrage cède
-panneau.2: NASSE : les toits, ou les quais
-panneau.3: Sous le pont : le fleuve et ses piles
+panneau.2: Les lignes se referment : les toits, ou les quais
+panneau.3: Creuse ici : deux camarades sous le pont
 panneau.4: ERREUR 49.3, DÉMOCRATIE NOT FOUND
 
 c: robot-bouclier
@@ -91,7 +91,7 @@ j: echafaudage
 ............................................................................B.........B...........................B.........B..t............................................................................................................M.........................M...................LLLLLLL...............
 ..................................................................ps........V.........V.......PPP.................V.........VPP.............................................................................................................V.........................V..................LLLLLLLLL..............
 .................................................................MMMM.......V.........V...........................V.........V...............................................................................................................V...........s.....c.......V.................aLLLLLLLLLL.............
-....D..1..x...l...c..x..u..a...m.x.a...K...Q...x.t..xo..m...c.!.MMMMMM.m...xV...2.....V...x.........N.........x...V.........Vj..u.Q..x...a.m....w...3...z.o.n.s...y.a...n.f.b...=...n.....w...a.m.n..<....>..cnm.z....Q..mwxo.cxsau.t!a..b..V.4...h..k..h.............VcaxKmxa..w..Q.$.LLLLLLLLLLLLL.c$...S.....
+....D.....x...l...c..x..u..a...m.x.a...K...Q...x.t..xo..m...c.!.MMMMMM.m...xV.........V...x........2N.........x...V.........Vj..u.Q..x...a.m....w...3...z.o.n.s...y.a.1.n.f.b...=...n.....w...a.m.n..<....>..cnm.z....Q..mwxo.cxsau.t!a..b..V.4...h..k..h.............VcaxKmxa..w..Q.$.LLLLLLLLLLLLL.c$...S.....
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGGGGGGGGGGGPPGGGGPPGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMGGGG..AGGGGGGGGGGGGOOOOOOGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGG..GGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMGGGG..AGGGGGGGGGGGGOOOOOOGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGG..GGGG..GGGGGGGGGGGGGGG...........................GGGG...................MM..........MM..........MM................GGGG..AGGGGGGGGGGGGOOOOOOGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG

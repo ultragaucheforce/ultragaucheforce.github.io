@@ -14,9 +14,9 @@ musique: hey-hey-macron
 musique-boss: macron-demission-peridurale
 
 panneau.1: GARDE À VUE : un camarade est à l'étage
-panneau.2: PONT : dessus, ou la galerie
+panneau.2: Monte sur la butte, ou casse les planches
 panneau.3: Tracts et manif : le barrage cède
-panneau.4: NASSE : monte sur le muret
+panneau.4: Les lignes se referment : monte sur le muret
 panneau.5: HYPERMARCHÉ
 
 g: lance-pleurs
@@ -70,7 +70,7 @@ $: liasse
 .........................................RRR......P.................P...............TTTTTTTTTTTTTTTTTT...........RR.............RR...........TTTTTTTTTTTTTTTTTT...........B..B.......v..........v.........B..B......B.................................................B...........................................LLLLLLL...................
 ........................................RRRR......P.................P...........g.TTTTTTTTTTTTTTTTTTTT.......................................TTTTTTTTTTTTTTTTTTTT.........B..B......BBB........BBB........B..B......V.....PP......PP......PP........PP......PP........V..........................................LLLLLLLLL..................
 .......................................RRRRR......P.................P...........TTTTTTTTTTTTTTTTTTTTTT.......................................TTTTTTTTTTTTTTTTTTTTTT.......B..B......BBB........BBB........B..B......V.....PP......PP......PP........PP......PP........V.........................................LLLLLLLLLLL.................
-...D.....j..u...g..j...g..s....K.4x.NwRRRRRRc.1*..P....j....X...g...P.Q*..w.2xTTTTTTTTTTTTTTTTTTTTTTTT....K...j.........!...o.........s......TTTTTTTTTTTTTTTTTTTTTTTT.3Q..B..B.t.jg.BBBgj..r...BBBg.a..g..B..B.xg.5.V...u.PP..j.g.PP.au.g.PP..s.u...PP..g...PP...u..g.V.xQ....u.a.u...j.p.t.a.........K...Q.$g.LLLLLLLLLLLLL.a.gag$...S.....
+...D.....j..u...g..j...g..s....K..x4NwRRRRRRc.1*..P....j....X...g...P.Q*..w.2xTTTTTTTTTTTTTTTTTTTTTTTT....K...j.........!...o.........s......TTTTTTTTTTTTTTTTTTTTTTTT..Q..B..B.t3jg.BBBgj..r...BBBg.a..g..B..B.xg.5.V...u.PP..j.g.PP.au.g.PP..s.u...PP..g...PP...u..g.V.xQ....u.a.u...j.p.t.a.........K...Q.$g.LLLLLLLLLLLLL.a.gag$...S.....
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGGGGGGGGGGGGGPPGGGGGGGGGGGGGGGGGGGGGGGGGGGGMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGG..GGGGGGGGGGGGGGGGGGGGGGGGOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO

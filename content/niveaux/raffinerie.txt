@@ -12,7 +12,6 @@ musique: internationale
 musique-boss: jeunesse-emmerde-le-fn-dreamz-remix
 
 panneau.1: Tracts et manif : le barrage cède
-panneau.2: [bas] + [tirer] : Creuser
 panneau.3: Remonte : le barrage est en haut
 panneau.4: STATION
 
@@ -68,7 +67,7 @@ $: liasse
 ......................................................B...........B...RR...............RR...RR...........RR...RRPPPPPPPPPPPPP....RR...........B.......B.......B.........B.......B.......B...........................RR..............RR..................R...................R....B...............B..................LLLLLLL...........
 ......................................................V...........V...RR...............RR...RR...........RR...RR.................RR...........V.......V.......V.........V.......V.......V...........................RR..............RR..................R...................R....V...............V.................LLLLLLLLL..........
 ......................................................V...........V...VV...............VV...VV...........VV...VV.................VV...........V.......V.......V.........V.......V.......V...........................RR..............RR..................R...................R....V...............V................LLLLLLLLLLL.........
-...D....t..*.K..x.j..u..,.=...s...g..<..Q.o.~1.g.b..2.V...........V..xVV..........X.X.XVVxgcVV.......X.X.XVc..VV............X.X.XVV.gjQ.w..q.cV.......V.x.w<..V.........Vx..g.g.V.......V,o.Q.c..u..c.X.X.X.X.gt.jx.RR....w..<g.....RR.u..t.....b.cco..gR4.p..g.p....p....c.R..x.V..........w....V...K.....Q..$..LLLLLLLLLLLLL..$.S...
+...D....t..*.K..x.j..u..,.=...s...g..<..Q.o.~1.g.b....V...........V..xVV..........X.X.XVVxgcVV.......X.X.XVc..VV............X.X.XVV.gjQ.w..q.cV.......V.x.w<..V.........Vx..g.g.V.......V,o.Q.c..u..c.X.X.X.X.gt.jx.RR....w..<g.....RR.u..t.....b.cco..gR4.p..g.p....p....c.R..x.V..........w....V...K.....Q..$..LLLLLLLLLLLLL..$.S...
 RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..OOORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOO
 RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR..OOORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROOOOOOOO
 TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT..TTTTTTTTTTTTTTTTTTTTTTTTT....................................TTTT..OOOTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTOOOOOOOO

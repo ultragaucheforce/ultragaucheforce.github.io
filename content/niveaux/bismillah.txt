@@ -21,7 +21,7 @@ musique-boss: abattez-la-citadelle
 panneau.1: Tracts et manif : le barrage cède
 panneau.2: Les lignes se referment : les toits, ou le métro
 panneau.3: GARDE À VUE : un camarade est à l'étage
-panneau.4: LA CITADELLE
+panneau.4: LA CITADELLE · Tracts et manif : la grille cède
 panneau.5: LYCÉES EN LUTTE
 
 c: robot-bouclier

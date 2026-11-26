@@ -12,7 +12,7 @@ auteur: xsbfh
 
 # Arme : des tracts lancés à la volée.
 arme.type: tir
-arme.cadence: 9
+arme.cadence: 7
 arme.vitesse: 300
 arme.dispersion: 16
 arme.portee: 190

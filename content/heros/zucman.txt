@@ -18,7 +18,7 @@ arme.type: tir
 arme.cadence: 1.6
 arme.vitesse: 210
 arme.portee: 260
-arme.degats: 4
+arme.degats: 2.5
 arme.terrain: 4
 arme.blindage: 1
 arme.explosion: 12

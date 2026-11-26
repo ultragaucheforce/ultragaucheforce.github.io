@@ -210,9 +210,9 @@ export function touchActions(points, view) {
     const act = p.act ?? gliding(landing(p.ox, p.oy, view), p.x, p.y, view);
     if (!act) continue;
     for (const a of act.split(' ')) pressed[a] = true;
-    // Glissé vers le haut depuis là où il a commencé à tirer (posé, ou entré dans le cercle) : le tir vise en haut.
-    // Un pouce simplement posé en haut du bouton tire droit.
-    if (act === 'fire' && (p.fy ?? p.oy) - p.y > ZONES.aim * unit) pressed.up = true;
+    // Glissé vers le haut depuis là où il a commencé à tirer (posé, ou entré dans le cercle), et arrivé au-dessus du
+    // centre du bouton : le tir vise en haut. Posé en haut du bouton, ou roulé dans sa moitié basse, il tire droit.
+    if (act === 'fire' && (p.fy ?? p.oy) - p.y > ZONES.aim * unit && p.y < fire.y) pressed.up = true;
   }
   return pressed;
 }

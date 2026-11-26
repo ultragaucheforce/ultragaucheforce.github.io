@@ -1565,8 +1565,8 @@ export class Renderer {
       this.label(p.word, box.x - this.cx + box.w / 2, y - 1, { size: 7.5, color: '#e43b44' });
       return;
     }
-    // Tiré à la verticale, le dessin pointe vers où il va, comme devant soi : vers le haut, puis vers le bas s'il retombe.
-    const turn = p.upright ? (p.vy < 0 ? -Math.PI / 2 : Math.PI / 2) : 0;
+    // Tiré vers le haut, le dessin pointe vers le haut, comme devant soi il pointe devant, et le reste s'il retombe.
+    const turn = p.upright < 0 ? -Math.PI / 2 : 0;
     if (p.word) {
       const color = p.team === 'ordre' ? '#e43b44' : '#f4f4f4';
       if (!turn) {

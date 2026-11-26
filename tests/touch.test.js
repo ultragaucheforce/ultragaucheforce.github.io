@@ -188,6 +188,10 @@ test('TIR posé en haut du bouton tire droit ; il faut glisser vers le haut pour
     assert.deepEqual(touchActions([p], view), { fire: true }, `${view.w}×${view.h} : entré dans TIR depuis SAUT, tir droit`);
     for (let dy = 5; dy <= 45; dy += 5) p = trackPoint(p, { x: entry.x, y: entry.y - dy }, view);
     assert.deepEqual(touchActions([p], view), { fire: true, up: true }, `${view.w}×${view.h} : entré depuis SAUT, monté de 45 px`);
+    // Posé bas sur le bouton et roulé vers le haut sans dépasser son centre : tir droit.
+    p = trackPoint(undefined, { x: f.x, y: f.y + 45 }, view);
+    for (let dy = 5; dy <= 45; dy += 5) p = trackPoint(p, { x: f.x, y: f.y + 45 - dy }, view);
+    assert.deepEqual(touchActions([p], view), { fire: true }, `${view.w}×${view.h} : posé bas, roulé de 45 px jusqu’au centre`);
   }
 });
 

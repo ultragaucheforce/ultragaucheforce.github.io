@@ -206,6 +206,31 @@ test('vers le haut, un tir part juste au-dessus du crâne, aussi long que devant
   }
 });
 
+test('un adversaire collé au tireur est touché même si un mur ou un plafond est plus près que la longueur du mot', () => {
+  const real = loadContent();
+  for (const id of ['rousseau', 'melenchon']) {
+    for (const up of [false, true]) {
+      const game = settle(play(flat({ height: 30, heros: id, legende: { f: { type: 'ennemi', id: 'barrage' } }, draw: (put, ground) => put(ground - 1, 20, 'f') }), { bundle: real.bundle, hero: id, invincible: true }));
+      const { world, hero } = game;
+      hero.facing = 1;
+      const e = game.enemies[0];
+      const steel = world.indexOf('acier');
+      // Un mur d'acier deux tuiles devant, ou un plafond trois tuiles au-dessus : plus près que le mot n'est long.
+      if (up) for (let tx = 0; tx < world.w; tx++) world.set(tx, Math.floor(hero.y / TILE) - 3, steel);
+      else for (let ty = 0; ty < world.h - 1; ty++) world.set(Math.floor((hero.x + hero.w) / TILE) + 2, ty, steel);
+      const before = e.hp;
+      for (let i = 0; i < 3; i++) {
+        if (up) [e.x, e.y] = [hero.x + hero.w / 2 - e.w / 2, hero.y - e.h - 6];
+        else [e.x, e.y] = [hero.x + hero.w + 6, hero.y + hero.h - e.h];
+        e.vx = 0;
+        e.vy = 0;
+        game.step(i === 0 ? { up, fire: true } : {});
+      }
+      assert.ok(e.hp < before, `${id}, ${up ? 'vers le haut' : 'devant soi'} : l’adversaire collé est touché (${before} → ${e.hp})`);
+    }
+  }
+});
+
 test('spéciale « onde » : repousse, étourdit et casse les planches autour', () => {
   const game = settle(play(flat({
     legende: { f: enemy('fonceur') },

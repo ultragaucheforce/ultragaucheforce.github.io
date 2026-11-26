@@ -32,6 +32,10 @@ export function spawnProjectile(game, p) {
 export function updateProjectiles(game, dt) {
   const { world } = game;
   for (const p of game.projectiles) {
+    // Tout juste lancé, il touche d'abord ce qui est déjà dans sa boîte : un adversaire collé au tireur, devant un mur
+    // ou sous un plafond plus proches que la longueur d'un mot, est touché avant que le décor n'arrête le tir.
+    if (p.age === 0) touchActors(game, p);
+    if (p.dead) continue;
     // Sous-pas : jamais plus de 6 pixels d'un coup, donc jamais à travers une tuile.
     const n = Math.max(1, Math.ceil((Math.max(Math.abs(p.vx), Math.abs(p.vy)) * dt) / 6));
     const h = dt / n;
